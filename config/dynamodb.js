@@ -1,0 +1,42 @@
+const { loadConfig } = require('./util');
+
+const tableProps = {
+};
+
+const tableNames = (stage) => {
+    return loadConfig().then((config) => Object.keys(tableProps).reduce((acc, name) => {
+        acc[name] = `${config.service}-${stage}-${name}`;
+        return acc;
+    }, {}));
+};
+
+const tableConfig = (stage) => {
+    return tableNames(stage).then((tables) => Object.keys(tables).reduce((acc, name) => {
+        acc[`DynamodbTable${name}`] = {
+            Type: 'AWS::DynamoDB::Table',
+            DeletionPolicy: 'Retain',
+            Properties: Object.assign({
+                TableName: tables[name],
+                ProvisionedThroughput: {
+                    ReadCapacityUnits: 2,
+                    WriteCapacityUnits: 1,
+                },
+            }, tableProps[name]),
+        };
+        return acc;
+    }, {}));
+};
+
+const tableEnv = (stage) => {
+    return tableNames(stage).then((tables) => Object.keys(tables).reduce((acc, name) => {
+        acc[`DYNAMODB_${name.toUpperCase()}`] = tables[name];
+        return acc;
+    }, {}));
+};
+
+module.exports = {
+    tableSpec: tableProps,
+    tableNames,
+    tableConfig,
+    tableEnv,
+};

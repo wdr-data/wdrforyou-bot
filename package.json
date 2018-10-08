@@ -1,0 +1,16 @@
+{
+  "name": "newsforyou-bot",
+  "version": "0.0.1",
+  "repository": "https://github.com/wdr-data/wdrforyou-bot.git",
+  "author": "Hacking Studio <github.com/hackingstudio>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "serverless": "^1.32.0",
+    "serverless-plugin-scripts": "^1.0.2",
+    "serverless-pseudo-parameters": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=6.10.0"
+  }
+}
