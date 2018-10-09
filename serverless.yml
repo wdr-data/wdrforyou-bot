@@ -41,6 +41,10 @@ provider:
 functions:
   hello:
     handler: entrypoint/hello.hello
+    events:
+      - http:
+          path: hello
+          method: get
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -75,10 +79,21 @@ functions:
 #    environment:
 #      variable2: value2
 
+custom:
+  webpack:
+    includeModules:
+      forceInclude:
+        - source-map-support
+      forceExclude:
+        - aws-sdk
+    packagerOptions:
+      scripts:
+        - npm rebuild grpc --target=6.1.0 --target_arch=x64 --target_platform=linux --target_libc=glibc
 
 plugins:
   - serverless-plugin-scripts
   - serverless-pseudo-parameters
+  - serverless-webpack
 
 # you can add CloudFormation resource templates here
 #resources:
