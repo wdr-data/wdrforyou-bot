@@ -12,7 +12,7 @@ export default async function(chat) {
     if (page.count === 0) {
         return chat.sendText(`Es gibt noch keine Meldungen.`);
     } else if (page.count === 1) {
-        return sendReport(page.results[0])
+        return sendReport(chat, page.results[0])
     } else {
         const elements = [];
 
