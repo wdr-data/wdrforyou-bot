@@ -1,6 +1,20 @@
 const { loadConfig } = require('./util');
 
 const tableProps = {
+    'attachments': {
+        AttributeDefinitions: [
+            {
+                AttributeName: 'url',
+                AttributeType: 'S',
+            },
+        ],
+        KeySchema: [
+            {
+                AttributeName: 'url',
+                KeyType: 'HASH',
+            },
+        ],
+    },
 };
 
 const tableNames = (stage) => {
