@@ -20,7 +20,7 @@ export default async function(chat) {
             const element = listElement(
                 report.headline,
                 null,
-                [ buttonPostback('📰 Lesen', { report: report.id }) ],
+                [ buttonPostback('📰 Lesen', { action: 'report', report: report.id }) ],
             );
             elements.push(element);
         }
