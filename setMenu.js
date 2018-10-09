@@ -15,6 +15,11 @@ const MENU_ACTIONS = [
         payload: JSON.stringify({ action: 'current_time' }),
     },
     {
+        title: '📰 Letzte Meldungen',
+        type: 'postback',
+        payload: JSON.stringify({ action: 'latest_reports' }),
+    },
+    {
         title: '🔧 An-/Abmelden',
         type: 'postback',
         payload: JSON.stringify({ action: 'subscriptions' }),
