@@ -15,7 +15,7 @@ const tableProps = {
             },
         ],
     },
-    'subscription': {
+    'subscriptions': {
         AttributeDefinitions: [
             {
                 AttributeName: 'psid',
