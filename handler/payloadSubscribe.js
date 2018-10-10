@@ -84,12 +84,10 @@ export const subscriptionList = async function(chat) {
     return chat.sendList(elements);
 };
 
-export const subscribe = function(chat, payload) {
+export const subscribe = async function(chat, payload) {
     if (Object.values(LanguageEnum).includes(payload.subscription)) {
-        promises.push(
-            chat.addLabel(payload.subscription),
-            enableSubscription(chat.event.sender.id, payload.subscription));
+        await chat.addLabel(payload.subscription);
+        await enableSubscription(chat.event.sender.id, { language: payload.subscription });
     }
-    return Promise.all(promises.concat(
-        chat.sendText(`Ich schick dir ab jetzt die Nachrichten, auf deiner gewählten Sprache.`)));
+    return chat.sendText(`Ich schick dir ab jetzt die Nachrichten, auf deiner gewählten Sprache.`);
 };
