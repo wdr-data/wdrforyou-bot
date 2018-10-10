@@ -1,12 +1,17 @@
 import { buttonPostback, listElement } from '../lib/facebook';
 import libSubscriptions from '../lib/subscriptions';
 
+import fs from "fs";
+
 const LanguageEnum = {
     ARABIC: 'arabic',
     PERIAN: 'persian',
     ENGLISH: 'english',
     GERMAN: 'german',
   };
+
+const contents = fs.readFileSync("assets/translations.json");
+const TRANSLATIONS = JSON.parse(contents);
 
 const getHasLabel = async function(chat) {
     const labels = await chat.getLabels();
@@ -35,9 +40,9 @@ export const subscriptionList = async function(chat) {
 
     elements.push(listElement(
         'Arabisch - Deutsch',
-        'Arabisch - Deutsch',
+        'عربي - ألماني',
         buttonPostback(
-            'Anmelden',
+            'تسجيل دخول',
             {
                 action: 'subscribe',
                 subscription: 'arabic',
@@ -47,9 +52,9 @@ export const subscriptionList = async function(chat) {
 
     elements.push(listElement(
         'Persisch - Deutsch',
-        'Persisch - Deutsch',
+        'فارسی-آلمانی',
         buttonPostback(
-            'Anmelden',
+            'ثبت نام',
             {
                 action: 'subscribe',
                 subscription: 'persian',
@@ -58,9 +63,9 @@ export const subscriptionList = async function(chat) {
     ));
     elements.push(listElement(
         'Englisch - Deutsch',
-        'Englisch - Deutsch',
+        'English - German',
         buttonPostback(
-            'Anmelden',
+            'Sign in',
             {
                 action: 'subscribe',
                 subscription: 'english',
@@ -80,7 +85,9 @@ export const subscriptionList = async function(chat) {
         )
     ));
 
-    await chat.sendText('Wähle deine Sprache');
+    await chat.sendText(
+        Object.values(TRANSLATIONS.subscriptionIntro).join('\n')
+    );
     return chat.sendList(elements);
 };
 
@@ -89,5 +96,6 @@ export const subscribe = async function(chat, payload) {
         await chat.addLabel(payload.subscription);
         await enableSubscription(chat.event.sender.id, { language: payload.subscription });
     }
-    return chat.sendText(`Ich schick dir ab jetzt die Nachrichten, auf deiner gewählten Sprache.`);
+
+    return chat.sendText(TRANSLATIONS.subscriptionReturn[payload.subscription]);
 };
