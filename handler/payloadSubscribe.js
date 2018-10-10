@@ -63,7 +63,7 @@ export const subscriptionList = async function(chat) {
         'Englisch - Deutsch',
         'English - German',
         buttonPostback(
-            'Sign in',
+            'Subscribe',
             {
                 action: 'subscribe',
                 subscription: 'english',
