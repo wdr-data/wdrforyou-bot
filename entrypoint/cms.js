@@ -35,7 +35,7 @@ export const sendReport = async (event, context, callback) => {
 const markSent = async (id) => {
     try {
         const response = await request.patch({
-            uri: urls.push(id),
+            uri: urls.report(id),
             json: true,
             headers: { Authorization: 'Token ' + process.env.CMS_API_TOKEN },
         });
