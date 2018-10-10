@@ -25,7 +25,12 @@ export const sendReport = async (event, context, callback) => {
 
     const translations = report.translations.map(e => e.text).join('\n\n');
 
-    await sendBroadcastText(`${translations}\n\n${report.text}`);
+    // Always send german text to german-subscribers
+    await sendBroadcastText(report.text, 'german');
+
+    for (const translation of translations) {
+        await sendBroadcastText(`${translation.text}\n\n${report.text}`, translation.language);
+    }
 
     return markSent(reportID);
 };
