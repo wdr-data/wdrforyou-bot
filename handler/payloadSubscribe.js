@@ -1,7 +1,6 @@
 import { buttonPostback, listElement } from '../lib/facebook';
 import libSubscriptions from '../lib/subscriptions';
-
-import fs from "fs";
+import translations from '../assets/translations';
 
 const LanguageEnum = {
     ARABIC: 'arabic',
@@ -9,9 +8,6 @@ const LanguageEnum = {
     ENGLISH: 'english',
     GERMAN: 'german',
   };
-
-const contents = fs.readFileSync("../assets/translations.json");
-const TRANSLATIONS = JSON.parse(contents);
 
 const getHasLabel = async function(chat) {
     const labels = await chat.getLabels();
@@ -90,7 +86,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     await chat.sendText(
-        Object.values(TRANSLATIONS.subscriptionIntro).join('\n')
+        Object.values(translations.subscriptionIntro).join('\n')
     );
     return chat.sendList(elements);
 };
@@ -101,5 +97,5 @@ export const subscribe = async function(chat, payload) {
         await enableSubscription(chat.event.sender.id, { language: payload.subscription });
     }
 
-    return chat.sendText(TRANSLATIONS.subscriptionReturn[payload.subscription]);
+    return chat.sendText(translations.subscriptionReturn[payload.subscription]);
 };
