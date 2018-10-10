@@ -5,5 +5,6 @@ export default {
         'report': require('./payloadReport').handler,
         'subscriptions': require('./payloadSubscribe').subscriptionList,
         'subscribe': require('./payloadSubscribe').subscribe,
+        'unsubscribe': require('./payloadSubscribe').unsubscribe,
     },
 };
