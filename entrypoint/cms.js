@@ -36,6 +36,7 @@ const markSent = async (id) => {
     try {
         const response = await request.patch({
             uri: urls.report(id),
+            body: { delivered: true },
             json: true,
             headers: { Authorization: 'Token ' + process.env.CMS_API_TOKEN },
         });
