@@ -69,7 +69,7 @@ export const subscriptionList = async function(chat) {
                 subscription: 'english',
             }
         ),
-        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Englisch_E1.png',
+        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/English_E1.png',
     ));
 
     elements.push(listElement(
