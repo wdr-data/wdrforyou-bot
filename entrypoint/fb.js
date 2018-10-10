@@ -98,42 +98,6 @@ const handleMessage = async (event, context, chat, msgEvent) => {
     }
 };
 
-export const push = async (event, context, callback) => {
-    let timing;
-    try {
-        timing = getTiming(event);
-    } catch (e) {
-        callback(null, {
-            statusCode: 400,
-            body: JSON.stringify({ success: false, message: e.message }),
-        });
-        return;
-    }
-
-    try {
-        const push = await getLatestPush(timing, { delivered: 0 });
-        const { intro, buttons, quickReplies } = assemblePush(push);
-        const message = await sendBroadcastButtons(
-            intro, buttons, quickReplies, 'push-' + timing
-        );
-        await markSent(push.id).catch(() => {});
-        console.log('Successfully sent push: ', message);
-        callback(null, {
-            statusCode: 200,
-            body: JSON.stringify({
-                success: true,
-                message: 'Successfully sent push: ' + message,
-            }),
-        });
-    } catch (e) {
-        console.error('Sending push failed: ', e.message);
-        callback(null, {
-            statusCode: 500,
-            body: JSON.stringify({ success: false, message: e.message }),
-        });
-    }
-};
-
 export const attachment = async (event, context, callback) => {
     const payload = JSON.parse(event.body);
     const url = payload.url;
