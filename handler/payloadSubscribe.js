@@ -88,14 +88,39 @@ export const subscriptionList = async function(chat) {
     await chat.sendText(
         Object.values(translations.subscriptionIntro).join('\n')
     );
-    return chat.sendList(elements);
+
+    return chat.sendList(
+        elements,
+        buttonPostback('Unsubscribe', { action: 'unsubscribe' })
+    );
+};
+
+const removeLabels = async function(chat) {
+    const currentLabels = await chat.getLabels();
+    const availableLanguages = Object.values(LanguageEnum);
+
+    for (const label of currentLabels) {
+        if (availableLanguages.includes(label)) {
+            await chat.removeLabel(label);
+        }
+    }
 };
 
 export const subscribe = async function(chat, payload) {
-    if (Object.values(LanguageEnum).includes(payload.subscription)) {
-        await chat.addLabel(payload.subscription);
-        await enableSubscription(chat.event.sender.id, { language: payload.subscription });
-    }
+    await removeLabels(chat);
+
+    await chat.addLabel(payload.subscription);
+    await enableSubscription(chat.event.sender.id, { language: payload.subscription });
 
     return chat.sendText(translations.subscriptionReturn[payload.subscription]);
+};
+
+export const unsubscribe = async function(chat) {
+    await removeLabels(chat);
+    try {
+        await libSubscriptions.remove(chat.event.sender.id);
+        return chat.sendText('OK');
+    } catch {
+        return chat.sendText('Keine Anmeldung gefunden.')
+    }
 };
