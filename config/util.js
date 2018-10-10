@@ -9,6 +9,7 @@ const requiredEnv = [
     "FB_VERIFYTOKEN",
     "FB_PAGETOKEN",
     "CMS_API_URL",
+    "CMS_API_TOKEN",
 ];
 
 const loadConfig = () => {

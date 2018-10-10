@@ -27,7 +27,6 @@ export const verify = async (event, context, callback) => {
     });
 };
 
-
 export const message = async (event, context, callback) => {
     let chat = null;
     try {

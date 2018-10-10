@@ -54,7 +54,7 @@ functions:
           method: get
   fbMessage:
     handler: entrypoint/fb.message
-    timeout: 15
+    timeout: 25
     events:
       - http:
           path: fb
@@ -65,6 +65,13 @@ functions:
     events:
       - http:
           path: attachment
+          method: post
+  cmsSendReport:
+    handler: entrypoint/cms.sendReport
+    timeout: 25
+    events:
+      - http:
+          path: sendReport
           method: post
 
 #    The following are a few example events you can configure
