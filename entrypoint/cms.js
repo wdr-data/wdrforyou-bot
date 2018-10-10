@@ -23,14 +23,12 @@ export const sendReport = async (event, context, callback) => {
         return;
     }
 
-    await markSent(reportID);
-
     const translations = report.translations.map(e => e.text).join('\n\n');
 
-    return sendBroadcastText(`${translations}\n\n${report.text}`);
+    await sendBroadcastText(`${translations}\n\n${report.text}`);
+
+    return markSent(reportID);
 };
-
-
 
 const markSent = async (id) => {
     try {
