@@ -10,7 +10,7 @@ const LanguageEnum = {
     GERMAN: 'german',
   };
 
-const contents = fs.readFileSync("assets/translations.json");
+const contents = fs.readFileSync("../assets/translations.json");
 const TRANSLATIONS = JSON.parse(contents);
 
 const getHasLabel = async function(chat) {
@@ -47,7 +47,8 @@ export const subscriptionList = async function(chat) {
                 action: 'subscribe',
                 subscription: 'arabic',
             }
-        )
+        ),
+        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Arabisch_A1.png',
     ));
 
     elements.push(listElement(
@@ -59,7 +60,8 @@ export const subscriptionList = async function(chat) {
                 action: 'subscribe',
                 subscription: 'persian',
             }
-        )
+        ),
+        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Persisch_F1.png',
     ));
     elements.push(listElement(
         'Englisch - Deutsch',
@@ -70,7 +72,8 @@ export const subscriptionList = async function(chat) {
                 action: 'subscribe',
                 subscription: 'english',
             }
-        )
+        ),
+        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Englisch_E1.png',
     ));
 
     elements.push(listElement(
@@ -82,7 +85,8 @@ export const subscriptionList = async function(chat) {
                 action: 'subscribe',
                 subscription: 'german',
             }
-        )
+        ),
+        'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Deutsch_D1.png',
     ));
 
     await chat.sendText(
