@@ -5,7 +5,6 @@ const request = require('request-promise-native');
 const S3 = require('aws-sdk/clients/s3');
 
 const requiredEnv = [
-    "TEST",
     "FB_VERIFYTOKEN",
     "FB_PAGETOKEN",
     "CMS_API_URL",
