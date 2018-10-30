@@ -1,6 +1,7 @@
 import request from 'request-promise-native';
-import { sendBroadcastText } from "../lib/facebook";
+import { sendBroadcastText, sendBroadcastButtons } from "../lib/facebook";
 import urls from "../lib/urls";
+import { makeMoreButton } from "../handler/payloadReport";
 
 
 export const sendReport = async (event, context, callback) => {
@@ -23,11 +24,22 @@ export const sendReport = async (event, context, callback) => {
         return;
     }
 
-    // Always send german text to german-subscribers
-    await sendBroadcastText(report.text, null, 'german');
+    const moreButton = makeMoreButton(report);
 
-    for (const translation of report.translations) {
-        await sendBroadcastText(`${translation.text}\n\n${report.text}`, null, translation.language);
+    if (!moreButton) {
+        // Always send german text to german-subscribers
+        await sendBroadcastText(report.text, null, 'german');
+
+        for (const translation of report.translations) {
+            await sendBroadcastText(`${translation.text}\n\n${report.text}`, null, translation.language);
+        }
+    } else {
+        // Always send german text to german-subscribers
+        await sendBroadcastButtons(report.text, [moreButton], null, 'german');
+
+        for (const translation of report.translations) {
+            await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, [moreButton], null, translation.language);
+        }
     }
 
     return markSent(reportID);

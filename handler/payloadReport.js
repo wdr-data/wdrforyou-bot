@@ -42,4 +42,5 @@ const sendReport = async function(chat, report) {
 export {
     handler,
     sendReport,
+    makeMoreButton,
 }
