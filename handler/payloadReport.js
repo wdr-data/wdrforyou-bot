@@ -13,7 +13,22 @@ const sendReport = async function(chat, report) {
     languages.push(report.text);
     const message = languages.join("\n\n");
 
-    return chat.sendText(message);
+    let hasMoreButton = !!report.media;
+
+    for (const translation of report.translations) {
+        hasMoreButton |= !!translation.media;
+    }
+
+    if (!hasMoreButton) {
+        return chat.sendText(message);
+    }
+
+    const moreButton = buttonPostback(
+        `➡️ ${chat.getTranslation('reportMoreButton')}`,
+        {action: 'report_more', report: report.id},
+    )
+
+    return chat.sendButtons(message, [moreButton]);
 };
 
 export {
