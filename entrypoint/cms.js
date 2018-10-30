@@ -30,7 +30,15 @@ export const sendReport = async (event, context, callback) => {
 
     let moreButton = makeMoreButton(translations.reportMoreButton.german, report);
 
-    if (!moreButton) {
+    let linkButton;
+
+    if (report.link) {
+        linkButton = buttonUrl(`🔗 Link`, report.link);
+    }
+
+    let buttons = [linkButton, moreButton].filter(e => !!e);
+
+    if (!buttons.length) {
         console.log('Sending broadcast without buttons');
         // Always send german text to german-subscribers
         await sendBroadcastText(report.text, null, 'german');
@@ -41,11 +49,12 @@ export const sendReport = async (event, context, callback) => {
     } else {
         console.log('Sending broadcast with buttons');
         // Always send german text to german-subscribers
-        await sendBroadcastButtons(report.text, [moreButton], null, 'german');
+        await sendBroadcastButtons(report.text, buttons, null, 'german');
 
         for (const translation of report.translations) {
             moreButton = makeMoreButton(translations.reportMoreButton[translation.language], report);
-            await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, [moreButton], null, translation.language);
+            buttons = [linkButton, moreButton].filter(e => !!e);
+            await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, buttons, null, translation.language);
         }
     }
 
