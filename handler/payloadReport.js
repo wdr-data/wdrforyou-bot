@@ -9,11 +9,11 @@ const handler = async function(chat, payload) {
 };
 
 const sendReport = async function(chat, report) {
-    await chat.sendText(report.text);
+    const languages = report.translations.map(e => e.text);
+    languages.push(report.text);
+    const message = languages.join("\n\n");
 
-    for (const translation of report.translations) {
-        await chat.sendText(translation.text);
-    }
+    return chat.sendText(message);
 };
 
 export {
