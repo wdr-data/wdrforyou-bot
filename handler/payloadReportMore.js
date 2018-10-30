@@ -5,10 +5,10 @@ import { buttonPostback } from '../lib/facebook';
 const handler = async function(chat, payload) {
     const url = `${urls.report(payload.report)}`;
 
-    return sendMore(chat, await request({ uri: url, json: true }), true);
+    return sendMore(chat, await request({ uri: url, json: true }));
 };
 
-const sendMore = async function(chat, report, all=false) {
+const sendMore = async function(chat, report) {
     const medias = [];
 
     if (report.media) {
@@ -16,7 +16,7 @@ const sendMore = async function(chat, report, all=false) {
     }
 
     for (const translation of report.translations) {
-        if (translation.media && (all || chat.language === translation.language)) {
+        if (translation.media && chat.language === translation.language) {
             medias.push(translation.media);
         }
     }

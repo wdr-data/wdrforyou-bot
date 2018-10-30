@@ -26,7 +26,14 @@ const makeMoreButton = function(title, report) {
 };
 
 const sendReport = async function(chat, report) {
-    const languages = report.translations.map(e => e.text);
+    const languages = [];
+
+    for (const translation of report.translations) {
+        if (chat.language === translation.language) {
+            languages.push(translation.text);
+        }
+    }
+
     languages.push(report.text);
     const message = languages.join("\n\n");
 
