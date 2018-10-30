@@ -27,7 +27,7 @@ export const sendReport = async (event, context, callback) => {
 
     console.log('Sending report: ' + JSON.stringify(report, null, 2));
 
-    const moreButton = makeMoreButton(report);
+    const moreButton = makeMoreButton("Mehr", report);
 
     if (!moreButton) {
         console.log('Sending broadcast without buttons');

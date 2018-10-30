@@ -8,7 +8,7 @@ const handler = async function(chat, payload) {
     return sendReport(chat, await request({ uri: url, json: true }));
 };
 
-const makeMoreButton = function(report) {
+const makeMoreButton = function(title, report) {
     let hasMoreButton = !!report.media;
 
     for (const translation of report.translations) {
@@ -20,7 +20,7 @@ const makeMoreButton = function(report) {
     }
 
     return buttonPostback(
-        `➡️ ${chat.getTranslation('reportMoreButton')}`,
+        `➡️ ${title}`,
         {action: 'report_more', report: report.id},
     );
 };
@@ -30,7 +30,7 @@ const sendReport = async function(chat, report) {
     languages.push(report.text);
     const message = languages.join("\n\n");
 
-    const moreButton = makeMoreButton(report);
+    const moreButton = makeMoreButton(chat.getTranslation('reportMoreButton'), report);
 
     if (!moreButton) {
         chat.sendText(message);
