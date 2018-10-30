@@ -1,6 +1,6 @@
 import request from 'request-promise-native';
 import urls from '../lib/urls';
-import { listElement, buttonPostback } from '../lib/facebook';
+import { buttonPostback } from '../lib/facebook';
 
 const handler = async function(chat, payload) {
     const url = `${urls.report(payload.report)}`;

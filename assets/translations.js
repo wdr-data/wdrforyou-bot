@@ -3,7 +3,7 @@ export default {
         arabic: "اختر لغتك المفضلة",
         persian: "فارسی",
         english: "Choose your language",
-        german: "Wähle deine Sprache"
+        german: "Wähle deine Sprache",
     },
     subscriptionReturn: {
         arabic: "مرحبا بكم في WICHTIGforyou. هنا تحصلون من \"في دي إر فوريو\" على آخر الأخبار العاجلة من خلال تطبيق الميسنجر. من خلالنا تحصل على آخر الأخبار الموثوقة باللغة العربية.",
