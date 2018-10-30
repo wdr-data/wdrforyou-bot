@@ -23,7 +23,7 @@ const enableSubscription = async function(psid, item) {
     } catch (error) {
         console.log('Creating user in dynamoDB failed: ', error);
         try {
-            await libSubscriptions.update(psid, item);
+            await libSubscriptions.update(psid, item.language);
             console.log(`Enabled subscription ${item} in dynamoDB for ${psid}`);
         } catch (error) {
             console.log('Updating user in dynamoDB failed: ', error);
