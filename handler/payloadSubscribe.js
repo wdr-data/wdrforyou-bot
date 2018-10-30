@@ -4,7 +4,7 @@ import translations from '../assets/translations';
 
 const LanguageEnum = {
     ARABIC: 'arabic',
-    PERIAN: 'persian',
+    PERSIAN: 'persian',
     ENGLISH: 'english',
     GERMAN: 'german',
   };
@@ -84,6 +84,10 @@ export const subscriptionList = async function(chat) {
         ),
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Deutsch_D1.png',
     ));
+
+    if (chat.language) {
+        await chat.sendText(chat.getTranslation('subscriptionStatus'));
+    }
 
     await chat.sendText(
         Object.values(translations.subscriptionIntro).join('\n')

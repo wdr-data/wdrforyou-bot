@@ -1,4 +1,10 @@
 export default {
+    subscriptionStatus: {
+        arabic: "Derzeit: Arabisch",
+        persian: "Derzeit: Persisch",
+        english: "Your subscription is currently set to English.",
+        german: "Du bist zur Zeit für Deutsch angemeldet.",
+    },
     subscriptionIntro: {
         arabic: "اختر لغتك المفضلة",
         persian: "فارسی",
