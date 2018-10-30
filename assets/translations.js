@@ -12,7 +12,7 @@ export default {
         german: "Hallo bei WICHTIGforyou. Hier schickt Dir WDRforyou die wichtigsten Eilmeldungen und Hintergrundinformation direkt und schnell über den Messenger. Bei uns bekommst Du verlässliche und gut recherchierte Nachrichten in Englisch-Deutsch.",
     },
     reportMoreButton: {
-        arabic: "Mehr",
+        arabic: "المزيد",
         persian: "Mehr",
         english: "More",
         german: "Mehr",
