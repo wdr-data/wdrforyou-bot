@@ -2,6 +2,7 @@ import request from 'request-promise-native';
 import { sendBroadcastText, sendBroadcastButtons } from "../lib/facebook";
 import urls from "../lib/urls";
 import { makeMoreButton } from "../handler/payloadReport";
+import translations from "../assets/translations";
 
 
 export const sendReport = async (event, context, callback) => {
@@ -27,7 +28,7 @@ export const sendReport = async (event, context, callback) => {
 
     console.log('Sending report: ' + JSON.stringify(report, null, 2));
 
-    const moreButton = makeMoreButton("Mehr", report);
+    let moreButton = makeMoreButton(translations.reportMoreButton.german, report);
 
     if (!moreButton) {
         console.log('Sending broadcast without buttons');
@@ -43,6 +44,7 @@ export const sendReport = async (event, context, callback) => {
         await sendBroadcastButtons(report.text, [moreButton], null, 'german');
 
         for (const translation of report.translations) {
+            moreButton = makeMoreButton(translations.reportMoreButton[translation.language], report);
             await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, [moreButton], null, translation.language);
         }
     }
