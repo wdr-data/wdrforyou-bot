@@ -19,10 +19,13 @@ export const sendReport = async (event, context, callback) => {
 
     const report = await request({ uri: url, json: true });
 
+
     if (!report) {
         console.error(`Report ${reportID} could not be retrieved from API`);
         return;
     }
+
+    console.log(JSON.stringify(report, null, 2));
 
     const moreButton = makeMoreButton(report);
 
@@ -33,6 +36,7 @@ export const sendReport = async (event, context, callback) => {
         for (const translation of report.translations) {
             await sendBroadcastText(`${translation.text}\n\n${report.text}`, null, translation.language);
         }
+        console.log('Sent broadcast without buttons');
     } else {
         // Always send german text to german-subscribers
         await sendBroadcastButtons(report.text, [moreButton], null, 'german');
@@ -40,6 +44,7 @@ export const sendReport = async (event, context, callback) => {
         for (const translation of report.translations) {
             await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, [moreButton], null, translation.language);
         }
+        console.log('Sent broadcast with buttons');
     }
 
     return markSent(reportID);

@@ -23,7 +23,7 @@ const makeMoreButton = function(report) {
         `➡️ ${chat.getTranslation('reportMoreButton')}`,
         {action: 'report_more', report: report.id},
     );
-}
+};
 
 const sendReport = async function(chat, report) {
     const languages = report.translations.map(e => e.text);
