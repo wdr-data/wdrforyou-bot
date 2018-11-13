@@ -23,4 +23,10 @@ export default {
         english: "More",
         german: "Mehr",
     },
+    unsubscribe: {
+        arabic: "خروج",
+        persian: "Abmelden",
+        english: "Unsubscribe",
+        german: "Abmelden",
+    },
 }

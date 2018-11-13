@@ -32,10 +32,11 @@ const enableSubscription = async function(psid, item) {
 };
 
 export const subscriptionList = async function(chat) {
+    const hasLabel = await getHasLabel(chat);
     const elements = [];
 
     elements.push(listElement(
-        'Arabisch - Deutsch',
+        (hasLabel('arabic') ? '✔ ' : '') + 'Arabisch - Deutsch',
         'عربي - ألماني',
         buttonPostback(
             'تسجيل دخول',
@@ -48,7 +49,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        'Persisch - Deutsch',
+        (hasLabel('persian') ? '✔ ' : '') + 'Persisch - Deutsch',
         'فارسی-آلمانی',
         buttonPostback(
             'ثبت نام',
@@ -60,7 +61,7 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Persisch_F1.png',
     ));
     elements.push(listElement(
-        'Englisch - Deutsch',
+        (hasLabel('english') ? '✔ ' : '') + 'Englisch - Deutsch',
         'English - German',
         buttonPostback(
             'Subscribe',
@@ -73,7 +74,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        'Deutsch',
+        (hasLabel('german') ? '✔ ' : '') + 'Deutsch',
         'Deutsch',
         buttonPostback(
             'Anmelden',
@@ -85,17 +86,22 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Deutsch_D1.png',
     ));
 
+    let buttonUnsubscribe = null;
     if (chat.language) {
-        await chat.sendText(chat.getTranslation('subscriptionStatus'));
+        buttonUnsubscribe = buttonPostback(
+            await chat.getTranslation('unsubscribe'),
+            { action: 'unsubscribe' },
+        );
     }
 
+    console.log(`button unsubscribe ${JSON.stringify(buttonUnsubscribe)} elements ${JSON.stringify(elements)}`);
     await chat.sendText(
         Object.values(translations.subscriptionIntro).join('\n')
     );
 
     return chat.sendList(
         elements,
-        buttonPostback('Unsubscribe', { action: 'unsubscribe' })
+        buttonUnsubscribe
     );
 };
 
