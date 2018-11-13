@@ -7,5 +7,9 @@ export default {
         'subscriptions': require('./payloadSubscribe').subscriptionList,
         'subscribe': require('./payloadSubscribe').subscribe,
         'unsubscribe': require('./payloadSubscribe').unsubscribe,
+        'share': require('./payloadShare').default,
+        'link_WDRforyou': require('./payloadLink').linkWdrForYou,
+        'about': require('./payloadFAQ').about,
+        'data_privacy': require('./payloadFAQ').dataPrivacy,
     },
 };

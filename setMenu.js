@@ -7,17 +7,49 @@ const GET_STARTED_PAYLOAD = {
     action: 'subscriptions',
 };
 
-const MENU_ACTIONS = [
+// german menu as default 
+const MENU_ACTIONS_DEFAULT = [
     {
-        title: '📰 Letzte Meldungen',
+        title: 'Teilen',
+        type: 'postback',
+        payload: JSON.stringify({ action: 'share' }),
+    },
+    {
+        title: 'Sprache ändern',
+        type: 'postback',
+        payload: JSON.stringify({ action: 'subscriptions' }),
+    },
+    {
+        title: 'Über',
+        type: 'nested',
+        call_to_actions: [
+    {
+                title: 'Letzte Meldungen',
         type: 'postback',
         payload: JSON.stringify({ action: 'latest_reports' }),
     },
     {
-        title: '🔧 An-/Abmelden',
+                title: 'FB-Seite WDRforyou',
+                type: 'postback',
+                payload: JSON.stringify({ action: 'link_WDRforyou' }),
+            },
+            {
+                title: 'Über den Service',
+                type: 'postback',
+                payload: JSON.stringify({ action: 'about' }),
+            },
+            {
+                title: 'Datenschutz',
+                type: 'postback',
+                payload: JSON.stringify({ action: 'data_privacy' }),
+            },
+            {
+                title: 'Abmelden ',
         type: 'postback',
         payload: JSON.stringify({ action: 'subscriptions' }),
     },
+        ]
+    }
 ];
 
 
@@ -26,7 +58,7 @@ const PERSISTENT_MENU_DATA = {
     [
         {
             locale: 'default',
-            'call_to_actions': MENU_ACTIONS,
+            'call_to_actions': MENU_ACTIONS_DEFAULT,
         },
     ],
 };
