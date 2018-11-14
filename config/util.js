@@ -9,6 +9,7 @@ const requiredEnv = [
     "FB_PAGETOKEN",
     "CMS_API_URL",
     "CMS_API_TOKEN",
+    "UA_TRACKING_ID",
 ];
 
 const loadConfig = () => {
