@@ -1,7 +1,6 @@
 import { Chat, sendBroadcastButtons, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
-import {handlerWrapper} from "../lib/lambda";
 
 
 export const verify = async (event, context) => {
