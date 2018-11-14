@@ -89,7 +89,7 @@ export const subscriptionList = async function(chat) {
     let buttonUnsubscribe = null;
     if (chat.language) {
         buttonUnsubscribe = buttonPostback(
-            await chat.getTranslation('unsubscribe'),
+            await chat.getTranslation(translations.unsubscribe),
             { action: 'unsubscribe' },
         );
     }

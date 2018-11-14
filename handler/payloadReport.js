@@ -1,6 +1,7 @@
 import request from 'request-promise-native';
 import urls from '../lib/urls';
 import { buttonPostback, buttonUrl } from '../lib/facebook';
+import translations from "../assets/translations";
 
 const handler = async function(chat, payload) {
     const url = `${urls.report(payload.report)}`;
@@ -43,7 +44,7 @@ const sendReport = async function(chat, report) {
         linkButton = buttonUrl(`🔗 Link`, report.link);
     }
 
-    const moreButton = makeMoreButton(chat.getTranslation('reportMoreButton'), report);
+    const moreButton = makeMoreButton(chat.getTranslation(translations.reportMoreButton), report);
     const buttons = [linkButton, moreButton].filter(e => !!e);
 
     if (!buttons.length) {
