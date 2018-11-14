@@ -10,6 +10,6 @@ export default {
         'share': require('./payloadShare').default,
         'link_WDRforyou': require('./payloadLink').linkWdrForYou,
         'about': require('./payloadFAQ').about,
-        'data_privacy': require('./payloadFAQ').dataPrivacy,
+        'companyDetails': require('./payloadFAQ').companyDetails,
     },
 };

@@ -1,66 +1,73 @@
+import translations from './assets/translations';
 request = require('request-promise-native');
 
-const FB_PAGETOKEN = process.env.FB_PAGETOKEN;
+const FB_PAGETOKEN = 'EAAENG2VDrkQBADxtiqw3PsRotsmL76oFEV9HWwpxB7iGBFRNat9JvxEcJ8eO5aEQB3UvwOptxjYXwle2z02Lt0vUdRC6nvgzEYssVIdyARch4SmeoYZAEuTELyhJq6gzoeIy7tPSs7o4QqpZCIE4IqErjGg87pdmLSGe2jrkrQK5m9L7MZC' //process.env.FB_PAGETOKEN;
 const MESSENGER_PROFILE_URL = 'https://graph.facebook.com/v2.12/me/messenger_profile';
+
+const FbLanguageEnum = {
+    'arabic': 'ar_AR',
+    'persian': 'fa_IR',
+    'english': 'en_GB',
+    'german': 'default',
+};
+const availableFbLanguages = Object.keys(FbLanguageEnum);
 
 const GET_STARTED_PAYLOAD = {
     action: 'subscriptions',
 };
 
-// german menu as default 
-const MENU_ACTIONS_DEFAULT = [
-    {
-        title: 'Teilen',
-        type: 'postback',
-        payload: JSON.stringify({ action: 'share' }),
-    },
-    {
-        title: 'Sprache ändern',
-        type: 'postback',
-        payload: JSON.stringify({ action: 'subscriptions' }),
-    },
-    {
-        title: 'Über',
-        type: 'nested',
-        call_to_actions: [
-    {
-                title: 'Letzte Meldungen',
-        type: 'postback',
-        payload: JSON.stringify({ action: 'latest_reports' }),
-    },
-    {
-                title: 'FB-Seite WDRforyou',
+const MENU_OPTIONS = []
+for (const language of availableFbLanguages) {
+    MENU_OPTIONS.push({
+        locale: FbLanguageEnum[language],
+        'call_to_actions': [
+            {
+                title: translations['share'][language],
                 type: 'postback',
-                payload: JSON.stringify({ action: 'link_WDRforyou' }),
+                payload: JSON.stringify({ action: 'share' }),
             },
             {
-                title: 'Über den Service',
+                title: translations['changeLanguage'][language],
                 type: 'postback',
-                payload: JSON.stringify({ action: 'about' }),
+                payload: JSON.stringify({ action: 'subscriptions' }),
             },
             {
-                title: 'Datenschutz',
-                type: 'postback',
-                payload: JSON.stringify({ action: 'data_privacy' }),
+                title: translations['about'][language],
+                type: 'nested',
+                call_to_actions: [
+                    {
+                        title: translations['latestReports'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'latest_reports' }),
+                    },
+                    {
+                        title: translations['WDRforyou'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'link_WDRforyou' }),
+                    },
+                    {
+                        title: translations['aboutService'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'about' }),
+                    },
+                    {
+                        title: translations['companyDetails'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'companyDetails' }),
+                    },
+                    {
+                        title: translations['unsubscribe'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'subscriptions' }),
+                    },
+                ]
             },
-            {
-                title: 'Abmelden ',
-        type: 'postback',
-        payload: JSON.stringify({ action: 'subscriptions' }),
-    },
         ]
-    }
-];
-
+    })
+}
 
 const PERSISTENT_MENU_DATA = {
-    'persistent_menu':
-    [
-        {
-            locale: 'default',
-            'call_to_actions': MENU_ACTIONS_DEFAULT,
-        },
-    ],
+    'persistent_menu': MENU_OPTIONS,
 };
 
 const GET_STARTED_DATA = {

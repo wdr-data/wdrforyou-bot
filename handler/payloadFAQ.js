@@ -1,4 +1,4 @@
-export const dataPrivacy = async function(chat) {
+export const companyDetails = async function(chat) {
     chat.sendText(`Für die Nutzung bei Facebook gelten die Datenschutz-Richtlinien von Facebook. ` +
         `Mein Programmcode hält sich an die Datenschutzbestimmungen des Westdeutschen Rundfunks: ` +
         `https://www1.wdr.de/hilfe/datenschutz102.html \n\n` +

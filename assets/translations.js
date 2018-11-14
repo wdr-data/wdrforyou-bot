@@ -1,10 +1,4 @@
 export default {
-    subscriptionStatus: {
-        arabic: "Derzeit: Arabisch",
-        persian: "Derzeit: Persisch",
-        english: "Your subscription is currently set to English.",
-        german: "Du bist zur Zeit für Deutsch angemeldet.",
-    },
     subscriptionIntro: {
         arabic: "اختر لغتك المفضلة",
         persian: "فارسی",
@@ -25,8 +19,50 @@ export default {
     },
     unsubscribe: {
         arabic: "خروج",
-        persian: "Abmelden",
+        persian: "خروج",
         english: "Unsubscribe",
         german: "Abmelden",
+    },
+    share: {
+        arabic: "مشاركة",
+        persian: "به مشاركت گذاشتن",
+        english: "Share",
+        german: "Teilen",
+    },
+    changeLanguage: {
+        arabic: "تغيير اللغة",
+        persian: "به تغيير زبان",
+        english: "Change Language",
+        german: "Sprache ändern",
+    },
+    about: {
+        arabic: "من نحن",
+        persian: "به درباره",
+        english: "About",
+        german: "Über",
+    },
+    latestReports: {
+        arabic: "منآخر الأخبار",
+        persian: "آخرين پيام ها",
+        english: "Last notifications",
+        german: "Letzte Meldungen",
+    },
+    WDRforyou: {
+        arabic: "في.دي.إر فوريو على فايسبوك",
+        persian: "ودرفوريو در فيسبوك",
+        english: "Facebook WDRforyou",
+        german: "Facebook WDRforyou",
+    },
+    aboutService: {
+        arabic: "في.دي.إر حول الخدمة",
+        persian: "درباره خدمات",
+        english: "About the service",
+        german: "Über den Service",
+    },
+    companyDetails: {
+        arabic: "في.ديمعلومات عن الخدمة",
+        persian: "اطلاعات ناشر",
+        english: "Masthead",
+        german: "Impressum",
     },
 }

@@ -94,7 +94,6 @@ export const subscriptionList = async function(chat) {
         );
     }
 
-    console.log(`button unsubscribe ${JSON.stringify(buttonUnsubscribe)} elements ${JSON.stringify(elements)}`);
     await chat.sendText(
         Object.values(translations.subscriptionIntro).join('\n')
     );
