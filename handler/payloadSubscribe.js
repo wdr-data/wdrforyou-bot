@@ -32,11 +32,10 @@ const enableSubscription = async function(psid, item) {
 };
 
 export const subscriptionList = async function(chat) {
-    const hasLabel = await getHasLabel(chat);
     const elements = [];
 
     elements.push(listElement(
-        (hasLabel('arabic') ? '✔ ' : '') + 'Arabisch - Deutsch',
+        (chat.language === 'arabic' ? '✔ ' : '') + 'Arabisch - Deutsch',
         'عربي - ألماني',
         buttonPostback(
             'تسجيل دخول',
@@ -49,7 +48,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        (hasLabel('persian') ? '✔ ' : '') + 'Persisch - Deutsch',
+        (chat.language === 'persian' ? '✔ ' : '') + 'Persisch - Deutsch',
         'فارسی-آلمانی',
         buttonPostback(
             'ثبت نام',
@@ -61,7 +60,7 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Persisch_F1.png',
     ));
     elements.push(listElement(
-        (hasLabel('english') ? '✔ ' : '') + 'Englisch - Deutsch',
+        (chat.language === 'english' ? '✔ ' : '') + 'Englisch - Deutsch',
         'English - German',
         buttonPostback(
             'Subscribe',
@@ -74,7 +73,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        (hasLabel('german') ? '✔ ' : '') + 'Deutsch',
+        (chat.language === 'german' ? '✔ ' : '') + 'Deutsch',
         'Deutsch',
         buttonPostback(
             'Anmelden',
