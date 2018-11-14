@@ -1,9 +1,10 @@
 import { Chat, sendBroadcastButtons, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
+import {handlerWrapper} from "../lib/lambda";
 
 
-export const verify = async (event, context, callback) => {
+export const verify = async (event, context) => {
     const params = event.queryStringParameters || {};
 
     const token = params['hub.verify_token'];
@@ -14,28 +15,38 @@ export const verify = async (event, context, callback) => {
       mode === 'subscribe' &&
       token === process.env.FB_VERIFYTOKEN
     ) {
-        callback(null, {
+        return {
             statusCode: 200,
             body: challenge,
-        });
-        return;
+        };
     }
 
-    callback(null, {
+    return {
         statusCode: 400,
         body: 'Parameter missing',
-    });
+    };
 };
 
-export const message = async (event, context, callback) => {
+export const message = async (event, context) => {
+    try {
+        await messageHandler(event, context);
+    } catch (e) {
+        console.error('Error:', e);
+    }
+
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            message: 'OK',
+            input: event,
+        }),
+    };
+};
+
+const messageHandler = async (event, context) => {
     let chat = null;
     try {
         const payload = JSON.parse(event.body);
-
-        callback(null, {
-            statusCode: 200,
-            body: 'works',
-        });
 
         console.log(JSON.stringify(payload, null, 2));
 
@@ -45,20 +56,19 @@ export const message = async (event, context, callback) => {
 
         return handleMessage(event, context, chat, msgEvent);
     } catch (error) {
-        console.error('ERROR:', error);
-
         try {
             if (chat) {
                 return chat.sendText('Da ist was schief gelaufen.');
             }
         } catch (e) {
-            console.error('Reporting error to user failed with:', e);
+            console.error('Reporting error to user failed:', e);
         }
+        throw error;
     }
 };
 
-const handleMessage = async (event, context, chat, msgEvent) => {
-    const psid = msgEvent.sender.id;
+const handleMessage = async (event, context, chat) => {
+    const msgEvent = chat.event;
 
     let replyPayload;
     if (msgEvent.postback) {
@@ -99,20 +109,20 @@ const handleMessage = async (event, context, chat, msgEvent) => {
     }
 };
 
-export const attachment = async (event, context, callback) => {
+export const attachment = async (event, context) => {
     const payload = JSON.parse(event.body);
     const url = payload.url;
 
     try {
         const id = await getAttachmentId(url, guessAttachmentType(url));
-        callback(null, {
+        return {
             statusCode: 200,
             body: JSON.stringify({ success: true, message: id }),
-        });
+        };
     } catch (e) {
-        callback(null, {
+        return {
             statusCode: 500,
             body: JSON.stringify({ success: false, message: e.message }),
-        });
+        };
     }
 };
