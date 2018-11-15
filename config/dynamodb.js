@@ -29,6 +29,24 @@ const tableProps = {
             },
         ],
     },
+    'LastDefaultReplies': {
+        AttributeDefinitions: [
+            {
+                AttributeName: 'psid',
+                AttributeType: 'S',
+            },
+        ],
+        KeySchema: [
+            {
+                AttributeName: 'psid',
+                KeyType: 'HASH',
+            },
+        ],
+        TimeToLiveSpecification: {
+            AttributeName: "ttl",
+            Enabled: "TRUE",
+        },
+    },
 };
 
 const tableNames = (stage) => {

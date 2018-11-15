@@ -1,6 +1,7 @@
 import { Chat, sendBroadcastButtons, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
+import DynamoDbCrud from '../lib/dynamodbCrud';
 
 
 export const verify = async (event, context) => {
@@ -92,8 +93,30 @@ const handleMessage = async (event, context, chat) => {
     }
 
     if ('text' in msgEvent.message) {
+        const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
+        let sendReply;
+        try {
+            const lastReply = await lastDefaultReplies.load(msgEvent.sender.id);
+            if (lastReply.ttl > Math.floor(Date.now() / 1000)) {
+                sendReply = false;
+            } else {
+                sendReply = true;
+            }
+        } catch {
+            sendReply = true;
+        }
+
         await chat.track.event('Testing', 'Standard-Antwort').send();
-        return chat.sendText(`Standard-Antwort was los?`);
+        if (sendReply) {
+            await chat.sendText(`Standard-Antwort was los?`);
+            const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
+            try {
+                await lastDefaultReplies.create(msgEvent.sender.id, {ttl});
+            } catch {
+                await lastDefaultReplies.update(msgEvent.sender.id, 'ttl', ttl);
+            }
+        }
+        return;
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
