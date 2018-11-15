@@ -92,13 +92,13 @@ const handleMessage = async (event, context, chat) => {
     }
 
     if ('text' in msgEvent.message) {
-        await chat.visitor.event('Testing', 'Standard-Antwort').send();
+        await chat.track.event('Testing', 'Standard-Antwort').send();
         return chat.sendText(`Standard-Antwort was los?`);
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
         if ('sticker_id' in msgEvent.message && msgEvent.message.sticker_id === 369239263222822) {
-            await chat.visitor.event('Testing', 'Like-Button').send();
+            await chat.track.event('Testing', 'Like-Button').send();
             return chat.sendText(`👌`);
         } else {
             return chat.sendText(`Sorry, hab meine Brille nicht auf`);
