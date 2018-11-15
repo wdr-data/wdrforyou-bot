@@ -36,8 +36,7 @@ const sendReport = async function(chat, report) {
     }
 
     languages.push(report.text);
-    const translations = languages.join("\n\n");
-    const message = '+++NEWS+++\n' + translations;
+    const message = '+++NEWS+++\n' + languages.join('\n\n');
 
     let linkButton;
 
