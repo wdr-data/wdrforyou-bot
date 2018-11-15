@@ -1,5 +1,5 @@
 import { buttonPostback, listElement } from '../lib/facebook';
-import libSubscriptions from '../lib/subscriptions';
+import DynamoDbCrud from '../lib/dynamodbCrud';
 import translations from '../assets/translations';
 
 const LanguageEnum = {
@@ -17,13 +17,14 @@ const getHasLabel = async function(chat) {
 };
 
 const enableSubscription = async function(psid, item) {
+    const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
     try {
         await libSubscriptions.create(psid, item);
         console.log(`Created in dynamoDB ${psid} with ${item}`);
     } catch (error) {
         console.log('Creating user in dynamoDB failed: ', error);
         try {
-            await libSubscriptions.update(psid, item.language);
+            await libSubscriptions.update(psid, 'language', item.language);
             console.log(`Enabled subscription ${item} in dynamoDB for ${psid}`);
         } catch (error) {
             console.log('Updating user in dynamoDB failed: ', error);
@@ -124,6 +125,7 @@ export const subscribe = async function(chat, payload) {
 };
 
 export const unsubscribe = async function(chat) {
+    const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
     await removeLabels(chat);
     try {
         await libSubscriptions.remove(chat.event.sender.id);
