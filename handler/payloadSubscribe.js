@@ -116,8 +116,12 @@ const removeLabels = async function(chat) {
 };
 
 export const subscribe = async function(chat, payload) {
+    if (chat.language) {
+        await chat.track.event('Bot', 'Abmeldung', chat.language).send();
+    }
     await removeLabels(chat);
 
+    await chat.track.event('Bot', 'Anmeldung', payload.subscription).send();
     await chat.addLabel(payload.subscription);
     await enableSubscription(chat.event.sender.id, { language: payload.subscription });
 
@@ -126,6 +130,7 @@ export const subscribe = async function(chat, payload) {
 
 export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
+    await chat.track.event('Bot', 'Abmeldung', chat.language).send();
     await removeLabels(chat);
     try {
         await libSubscriptions.remove(chat.event.sender.id);

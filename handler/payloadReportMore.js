@@ -9,6 +9,7 @@ const handler = async function(chat, payload) {
 };
 
 const sendMore = async function(chat, report) {
+    await chat.track.event('Bot', 'Medien Button', report.headline).send();
     const medias = [];
 
     if (report.media) {
