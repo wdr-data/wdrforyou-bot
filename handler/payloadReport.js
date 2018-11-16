@@ -39,20 +39,24 @@ const sendReport = async function(chat, report) {
     const message = '+++NEWS+++\n' + languages.join('\n\n');
 
     let linkButton;
+    let moreButton;
 
     if (report.link) {
         linkButton = buttonUrl(`🔗 Link`, report.link);
     }
 
-    let title;
-    let mediaType = guessAttachmentType(report.media)
-    if (mediaType == 'audio') {
-        title = chat.getTranslation(translations.reportAudioButton);
-    } else {
-        title = chat.getTranslation(translations.reportVideoButton); 
+    if (report.media) {
+        let title;
+        let mediaType = guessAttachmentType(report.media)
+        if (mediaType == 'audio') {
+            title = chat.getTranslation(translations.reportAudioButton);
+        } else {
+            title = chat.getTranslation(translations.reportVideoButton);
+        }
+
+        moreButton = makeMoreButton(title, report);
     }
 
-    const moreButton = makeMoreButton(title, report);
     const buttons = [linkButton, moreButton].filter(e => !!e);
 
     if (!buttons.length) {
