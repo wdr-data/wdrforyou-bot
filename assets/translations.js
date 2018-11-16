@@ -62,7 +62,13 @@ export default {
     companyDetails: {
         arabic: "في.ديمعلومات عن الخدمة",
         persian: "اطلاعات ناشر",
-        english: "Masthead",
+        english: "Impressum",
         german: "Impressum",
     },
+    defaultReply: {
+        arabic: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+        persian: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+        english: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+        german: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+    }
 }

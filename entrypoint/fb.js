@@ -2,6 +2,7 @@ import { Chat, sendBroadcastButtons, guessAttachmentType } from '../lib/facebook
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
 import DynamoDbCrud from '../lib/dynamodbCrud';
+import translations from '../assets/translations';
 
 
 export const verify = async (event, context) => {
@@ -108,7 +109,7 @@ const handleMessage = async (event, context, chat) => {
 
         await chat.track.event('Testing', 'Standard-Antwort').send();
         if (sendReply) {
-            await chat.sendText(`Standard-Antwort was los?`);
+            await chat.sendText(chat.getTranslation(translations.defaultReply));
             const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
             try {
                 await lastDefaultReplies.create(msgEvent.sender.id, {ttl});
