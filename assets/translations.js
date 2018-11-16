@@ -11,11 +11,17 @@ export default {
         english: "Hey there. This is WICHTIGforyou, the place where WDRforyou provides you with Breaking NEWS  and background information directly and promptly via Messenger. Here you receive reliable and well researched News in English and German.",
         german: "Hallo bei WICHTIGforyou. Hier schickt Dir WDRforyou die wichtigsten Eilmeldungen und Hintergrundinformation direkt und schnell über den Messenger. Bei uns bekommst Du verlässliche und gut recherchierte Nachrichten in Englisch-Deutsch.",
     },
-    reportMoreButton: {
-        arabic: "المزيد",
-        persian: "Mehr",
-        english: "More",
-        german: "Mehr",
+    reportAudioButton: {
+        arabic: "hören",
+        persian: "hören",
+        english: "listen",
+        german: "hören",
+    },
+    reportVideoButton: {
+        arabic: "anschauen",
+        persian: "anschauen",
+        english: "view",
+        german: "anschauen",
     },
     unsubscribe: {
         arabic: "خروج",

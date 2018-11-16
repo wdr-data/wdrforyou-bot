@@ -1,6 +1,6 @@
 import request from 'request-promise-native';
 import urls from '../lib/urls';
-import { buttonPostback, buttonUrl } from '../lib/facebook';
+import { buttonPostback, buttonUrl, guessAttachmentType } from '../lib/facebook';
 import translations from "../assets/translations";
 
 const handler = async function(chat, payload) {
@@ -44,7 +44,15 @@ const sendReport = async function(chat, report) {
         linkButton = buttonUrl(`🔗 Link`, report.link);
     }
 
-    const moreButton = makeMoreButton(chat.getTranslation(translations.reportMoreButton), report);
+    let title;
+    let mediaType = guessAttachmentType(report.media)
+    if (mediaType == 'audio') {
+        title = chat.getTranslation(translations.reportAudioButton);
+    } else {
+        title = chat.getTranslation(translations.reportVideoButton); 
+    }
+
+    const moreButton = makeMoreButton(title, report);
     const buttons = [linkButton, moreButton].filter(e => !!e);
 
     if (!buttons.length) {
