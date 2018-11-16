@@ -9,19 +9,34 @@ const handler = async function(chat, payload) {
     return sendReport(chat, await request({ uri: url, json: true }));
 };
 
-const makeMoreButton = function(title, report) {
-    let hasMoreButton = !!report.media;
+const makeMoreButton = function(report, language) {
+    let media;
 
-    for (const translation of report.translations) {
-        hasMoreButton |= !!translation.media;
+    if (language === 'german') {
+        media = report.media
+    } else {
+        for (const translation of report.translations) {
+            if (translation.language === language) {
+                media = translation.media;
+            }
+        }
     }
 
-    if (!hasMoreButton) {
+    if (!media) {
         return null;
     }
 
+    const mediaType = guessAttachmentType(media);
+    let title;
+
+    if (mediaType === 'audio') {
+        title = `➡️ ${translations.reportAudioButton[language]}`;
+    } else {
+        title = `➡️ ${translations.reportVideoButton[language]}`;
+    }
+
     return buttonPostback(
-        `➡️ ${title}`,
+        title,
         {action: 'report_more', report: report.id},
     );
 };
@@ -39,22 +54,10 @@ const sendReport = async function(chat, report) {
     const message = '+++NEWS+++\n' + languages.join('\n\n');
 
     let linkButton;
-    let moreButton;
+    const moreButton = makeMoreButton(report, chat.language);
 
     if (report.link) {
         linkButton = buttonUrl(`🔗 Link`, report.link);
-    }
-
-    if (report.media) {
-        let title;
-        let mediaType = guessAttachmentType(report.media)
-        if (mediaType == 'audio') {
-            title = chat.getTranslation(translations.reportAudioButton);
-        } else {
-            title = chat.getTranslation(translations.reportVideoButton);
-        }
-
-        moreButton = makeMoreButton(title, report);
     }
 
     const buttons = [linkButton, moreButton].filter(e => !!e);

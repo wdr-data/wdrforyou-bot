@@ -1,8 +1,7 @@
 import request from 'request-promise-native';
-import { sendBroadcastText, sendBroadcastButtons } from "../lib/facebook";
+import {sendBroadcastText, sendBroadcastButtons, guessAttachmentType} from "../lib/facebook";
 import urls from "../lib/urls";
 import { makeMoreButton } from "../handler/payloadReport";
-import translations from "../assets/translations";
 
 
 export const sendReport = async (event, context) => {
@@ -24,8 +23,8 @@ export const sendReport = async (event, context) => {
 
         console.log('Sending report: ' + JSON.stringify(report, null, 2));
 
-        let moreButton = makeMoreButton(translations.reportMoreButton.german, report);
 
+        let moreButton = makeMoreButton(report, 'german');
         let linkButton;
 
         if (report.link) {
@@ -48,7 +47,7 @@ export const sendReport = async (event, context) => {
             await sendBroadcastButtons(report.text, buttons, null, 'german');
 
             for (const translation of report.translations) {
-                moreButton = makeMoreButton(translations.reportMoreButton[translation.language], report);
+                moreButton = makeMoreButton(report, translation.language);
                 buttons = [linkButton, moreButton].filter(e => !!e);
                 await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, buttons, null, translation.language);
             }
