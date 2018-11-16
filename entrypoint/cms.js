@@ -1,5 +1,5 @@
 import request from 'request-promise-native';
-import {sendBroadcastText, sendBroadcastButtons, guessAttachmentType} from "../lib/facebook";
+import { sendBroadcastText, sendBroadcastButtons, buttonUrl } from "../lib/facebook";
 import urls from "../lib/urls";
 import { makeMoreButton } from "../handler/payloadReport";
 
