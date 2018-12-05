@@ -1,23 +1,20 @@
 language: node_js
-
 sudo: false
-
 node_js:
 - 8
-
 env:
   global:
-    - ENV_BUCKET_NAME=newsforyou-bot-config
-    - AWS_REGION=eu-central-1
-
+  - ENV_BUCKET_NAME=newsforyou-bot-config
+  - AWS_REGION=eu-central-1
 cache: yarn
-
 script:
 - echo "No tests :)"
-
 deploy:
-  - provider: script
-    skip_cleanup: true
-    script: export SLS_STAGE=staging && yarn serverless deploy
-    on:
-      branch: master
+- provider: script
+  skip_cleanup: true
+  script: export SLS_STAGE=staging && yarn serverless deploy
+  on:
+    branch: master
+notifications:
+  slack:
+    secure: eMdIF1kGMhPUxOKDBuIOQDFTn9T94W53E1hB2TOPIePtp34XT7ZLn7TxhL3YKLAoNf6HXYAPy/+X8DKwkuQewjFX2bGM8wgdvoHMCrY7i5nUecGgF/4mq1uqv0ZK307+TvjwPJf6n6mP6NMXfH/+9Owt+HGv0Gdm54OM23c1O4dCU43FEB5ACn6KQo9skhU+aXqPRwfe1WjdLD++ZO8KBwNJhyAYb3PYw2I8y4K5VHSYE0NpSHkd/J0TXWtf43eybwV1zl8LkehgNmEbJbC0tTPVbTE/hd/C+WuUGtYwGpNkYvpa6425jBhP4GYD7UTKLFuJRFeY+vSVll+6u/vOzuhJ3zp7+jWBTEnJZS9oNejuVLHAfubyZSpU5DkQU0ziGI6SleLs5DIlz87McanP+oAdAl5P3ydxP+odlh59yOcRxBFX7MYAnv2Mpd6I65vkWgL8iu/Gj4wRWFvOFfNVX7QXJJrl8dpU59gu02q9WnHVqROoJrrNydr+4Ierxyy9H8uxwqD1D0W6RQqA4a6aedVCM6gR1T8IhtNDJt187NG42L74WKylnlCFmsmuBvXQbycX4R+iQQ4rZ6Ml/iXU5+wD+f4gPiQJMxQSv/Xae5i8Vh7xKxpHtDLGfN508q+MpCLlGcOCVIlrl6rQ2ZvikaFjazQb6m8ivEknKT8MhJk=
