@@ -10,22 +10,16 @@ const handler = async function(chat, payload) {
 
 const sendMore = async function(chat, report) {
     await chat.track.event('Bot', 'Medien Button', report.headline).send();
-    const medias = [];
 
-    if (report.media) {
-        medias.push(report.media);
+    if (chat.language === 'german' && report.media) {
+        await chat.sendAttachment(report.media);
     }
 
     for (const translation of report.translations) {
-        if (translation.media && chat.language === translation.language) {
-            medias.push(translation.media);
+        if (chat.language === translation.language && translation.media) {
+            await chat.sendAttachment(translation.media);
         }
     }
-
-    for (const media of medias) {
-        await chat.sendAttachment(media);
-    }
-
 };
 
 export {
