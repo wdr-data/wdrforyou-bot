@@ -23,6 +23,12 @@ export default {
         english: "view",
         german: "anschauen",
     },
+    reportLinkButton: {
+        arabic: "المزيد من المعلومات",
+        persian: "اطلاعات بیشتر",
+        english: "More Info",
+        german: "Mehr Infos",
+    },
     unsubscribe: {
         arabic: "خروج",
         persian: "خروج",

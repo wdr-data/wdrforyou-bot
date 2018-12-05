@@ -30,9 +30,9 @@ const makeMoreButton = function(report, language) {
     let title;
 
     if (mediaType === 'audio') {
-        title = `➡️ ${translations.reportAudioButton[language]}`;
+        title = `▶️ ${translations.reportAudioButton[language]}`;
     } else {
-        title = `➡️ ${translations.reportVideoButton[language]}`;
+        title = `▶️ ${translations.reportVideoButton[language]}`;
     }
 
     return buttonPostback(
@@ -57,10 +57,10 @@ const sendReport = async function(chat, report) {
     const moreButton = makeMoreButton(report, chat.language);
 
     if (report.link) {
-        linkButton = buttonUrl(`🔗 Link`, report.link);
+        linkButton = buttonUrl(`🔗 ${chat.getTranslation(translations.reportLinkButton)}`, report.link);
     }
 
-    const buttons = [linkButton, moreButton].filter(e => !!e);
+    const buttons = [moreButton, linkButton].filter(e => !!e);
 
     if (!buttons.length) {
         return chat.sendText(message);

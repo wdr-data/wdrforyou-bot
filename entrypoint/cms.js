@@ -2,6 +2,7 @@ import request from 'request-promise-native';
 import { sendBroadcastText, sendBroadcastButtons, buttonUrl } from "../lib/facebook";
 import urls from "../lib/urls";
 import { makeMoreButton } from "../handler/payloadReport";
+import translations from "../assets/translations";
 
 
 export const sendReport = async (event, context) => {
@@ -23,35 +24,33 @@ export const sendReport = async (event, context) => {
 
         console.log('Sending report: ' + JSON.stringify(report, null, 2));
 
-
-        let moreButton = makeMoreButton(report, 'german');
-        let linkButton;
-
-        if (report.link) {
-            linkButton = buttonUrl(`🔗 Link`, report.link);
-        }
-
-        let buttons = [linkButton, moreButton].filter(e => !!e);
-
         const prefix = '+++NEWS+++\n';
 
-        if (!buttons.length) {
-            console.log('Sending broadcast without buttons');
-            // Always send german text to german-subscribers
-            await sendBroadcastText(prefix + report.text, null, 'german');
+        const allTranslations = [report, ...report.translations];
 
-            for (const translation of report.translations) {
-                await sendBroadcastText(`${prefix}${translation.text}\n\n${report.text}`, null, translation.language);
+        for (const translation of allTranslations) {
+            const moreButton = makeMoreButton(report, translation.language || 'german');
+            let linkButton;
+
+            if (translation.link) {
+                linkButton = buttonUrl(`🔗 ${translations.reportLinkButton[translation.language || 'german']}`, translation.link);
             }
-        } else {
-            console.log('Sending broadcast with buttons');
-            // Always send german text to german-subscribers
-            await sendBroadcastButtons(prefix + report.text, buttons, null, 'german');
 
-            for (const translation of report.translations) {
-                moreButton = makeMoreButton(report, translation.language);
-                buttons = [linkButton, moreButton].filter(e => !!e);
-                await sendBroadcastButtons(`${prefix}${translation.text}\n\n${report.text}`, buttons, null, translation.language);
+            const buttons = [moreButton, linkButton].filter(e => !!e);
+
+            let text;
+            if (!translation.language) {
+                text = prefix + translation.text;
+            } else {
+                text = `${prefix}${translation.text}\n\n${report.text}`;
+            }
+
+            if (!buttons.length) {
+                console.log('Sending broadcast without buttons');
+                await sendBroadcastText(text, null, translation.language || 'german');
+            } else {
+                console.log('Sending broadcast with buttons');
+                await sendBroadcastButtons(text, buttons, null, translation.language || 'german');
             }
         }
 
