@@ -33,23 +33,25 @@ export const sendReport = async (event, context) => {
 
         let buttons = [linkButton, moreButton].filter(e => !!e);
 
+        const prefix = '+++NEWS+++\n';
+
         if (!buttons.length) {
             console.log('Sending broadcast without buttons');
             // Always send german text to german-subscribers
-            await sendBroadcastText(report.text, null, 'german');
+            await sendBroadcastText(prefix + report.text, null, 'german');
 
             for (const translation of report.translations) {
-                await sendBroadcastText(`${translation.text}\n\n${report.text}`, null, translation.language);
+                await sendBroadcastText(`${prefix}${translation.text}\n\n${report.text}`, null, translation.language);
             }
         } else {
             console.log('Sending broadcast with buttons');
             // Always send german text to german-subscribers
-            await sendBroadcastButtons(report.text, buttons, null, 'german');
+            await sendBroadcastButtons(prefix + report.text, buttons, null, 'german');
 
             for (const translation of report.translations) {
                 moreButton = makeMoreButton(report, translation.language);
                 buttons = [linkButton, moreButton].filter(e => !!e);
-                await sendBroadcastButtons(`${translation.text}\n\n${report.text}`, buttons, null, translation.language);
+                await sendBroadcastButtons(`${prefix}${translation.text}\n\n${report.text}`, buttons, null, translation.language);
             }
         }
 
