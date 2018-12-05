@@ -1,5 +1,5 @@
 import translations from './assets/translations';
-request = require('request-promise-native');
+const request = require('request-promise-native');
 
 const FB_PAGETOKEN = 'EAAENG2VDrkQBADxtiqw3PsRotsmL76oFEV9HWwpxB7iGBFRNat9JvxEcJ8eO5aEQB3UvwOptxjYXwle2z02Lt0vUdRC6nvgzEYssVIdyARch4SmeoYZAEuTELyhJq6gzoeIy7tPSs7o4QqpZCIE4IqErjGg87pdmLSGe2jrkrQK5m9L7MZC' //process.env.FB_PAGETOKEN;
 const MESSENGER_PROFILE_URL = 'https://graph.facebook.com/v2.12/me/messenger_profile';
