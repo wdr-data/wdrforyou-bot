@@ -5,10 +5,10 @@ const FB_PAGETOKEN = process.env.FB_PAGETOKEN;
 const MESSENGER_PROFILE_URL = 'https://graph.facebook.com/v2.12/me/messenger_profile';
 
 const FbLanguageEnum = {
-    'arabic': 'ar_AR',
-    'persian': 'fa_IR',
-    'english': 'en_GB',
-    'german': 'default',
+    'arabic': ['ar_AR'],
+    'persian': ['fa_IR'],
+    'english': ['en_GB', 'en_US'],
+    'german': ['default'],
 };
 const availableFbLanguages = Object.keys(FbLanguageEnum);
 
@@ -16,10 +16,9 @@ const GET_STARTED_PAYLOAD = {
     action: 'subscriptions',
 };
 
-const MENU_OPTIONS = []
-for (const language of availableFbLanguages) {
-    MENU_OPTIONS.push({
-        locale: FbLanguageEnum[language],
+const makeMenuLanguage = (locale, language) => {
+    return {
+        locale,
         'call_to_actions': [
             {
                 title: translations['share'][language],
@@ -63,11 +62,18 @@ for (const language of availableFbLanguages) {
                 ]
             },
         ]
-    })
+    };
+};
+
+const menu_options = [];
+for (const language of availableFbLanguages) {
+    for (const locale of FbLanguageEnum[language]) {
+        menu_options.push(makeMenuLanguage(locale, language));
+    }
 }
 
 const PERSISTENT_MENU_DATA = {
-    'persistent_menu': MENU_OPTIONS,
+    'persistent_menu': menu_options,
 };
 
 const GET_STARTED_DATA = {
