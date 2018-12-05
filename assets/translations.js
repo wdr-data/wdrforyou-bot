@@ -48,10 +48,10 @@ export default {
         german: "Sprache ändern",
     },
     about: {
-        arabic: "من نحن",
-        persian: "به درباره",
-        english: "About",
-        german: "Über",
+        arabic: "من المزيد من المعلومات",
+        persian: "اطلاعات بیشتر",
+        english: "More Info",
+        german: "Mehr Infos",
     },
     latestReports: {
         arabic: "منآخر الأخبار",
@@ -66,15 +66,15 @@ export default {
         german: "Facebook WDRforyou",
     },
     aboutService: {
-        arabic: "في.دي.إر حول الخدمة",
-        persian: "درباره خدمات",
-        english: "About the service",
-        german: "Über den Service",
+        arabic: "arabisch: Über INFOSforyou",
+        persian: "درباره اینفو فور یو",
+        english: "About INFOSforyou",
+        german: "Über INFOSforyou",
     },
     companyDetails: {
-        arabic: "في.ديمعلومات عن الخدمة",
-        persian: "اطلاعات ناشر",
-        english: "Impressum",
+        arabic: "في.lمعلومات عن الخدمة",
+        persian: "اطلاعاتاطلاعات ناشر",
+        english: "Company Information",
         german: "Impressum",
     },
     defaultReply: {
