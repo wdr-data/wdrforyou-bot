@@ -36,7 +36,7 @@ export const subscriptionList = async function(chat) {
     const elements = [];
 
     elements.push(listElement(
-        (chat.language === 'arabic' ? '✔ ' : '') + 'Arabisch - Deutsch',
+        (chat.language === 'arabic' && chat.subscribed ? '✔ ' : '') + 'Arabisch - Deutsch',
         'عربي - ألماني',
         buttonPostback(
             'تسجيل دخول',
@@ -49,7 +49,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        (chat.language === 'persian' ? '✔ ' : '') + 'Persisch - Deutsch',
+        (chat.language === 'persian' && chat.subscribed ? '✔ ' : '') + 'Persisch - Deutsch',
         'فارسی-آلمانی',
         buttonPostback(
             'ثبت نام',
@@ -61,7 +61,7 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Persisch_F1.png',
     ));
     elements.push(listElement(
-        (chat.language === 'english' ? '✔ ' : '') + 'Englisch - Deutsch',
+        (chat.language === 'english' && chat.subscribed ? '✔ ' : '') + 'Englisch - Deutsch',
         'English - German',
         buttonPostback(
             'Subscribe',
@@ -74,7 +74,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     elements.push(listElement(
-        (chat.language === 'german' ? '✔ ' : '') + 'Deutsch',
+        (chat.language === 'german' && chat.subscribed ? '✔ ' : '') + 'Deutsch',
         'Deutsch',
         buttonPostback(
             'Anmelden',
@@ -87,7 +87,7 @@ export const subscriptionList = async function(chat) {
     ));
 
     let buttonUnsubscribe = null;
-    if (chat.language) {
+    if (chat.subscribed) {
         buttonUnsubscribe = buttonPostback(
             await chat.getTranslation(translations.unsubscribe),
             { action: 'unsubscribe' },
@@ -116,7 +116,7 @@ const removeLabels = async function(chat) {
 };
 
 export const subscribe = async function(chat, payload) {
-    if (chat.language) {
+    if (chat.subscribed) {
         await chat.track.event('Bot', 'Abmeldung', chat.language).send();
     }
     await removeLabels(chat);
