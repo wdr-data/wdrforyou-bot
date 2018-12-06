@@ -16,7 +16,7 @@ git clone https://github.com/wdr-data/wdrforyou-cms.git
 
 ### Local development
 
-You need to create a file called `.env.yml` in the root folder of the bot directory. 
+You need to create a file called `.env.yml` in the root folder of the bot directory.
 We will show you how to fill in the variables later in this text.
 
 ```yml
@@ -36,7 +36,7 @@ Go to your local repository and run:
 yarn  OR  yarn install
 ```
 
-To start with local development: 
+To start with local development:
 ```
 yarn sls deploy
 ```
@@ -48,8 +48,8 @@ For easy handling of AWS account use `aws-cli`: https://github.com/aws/aws-cli
 
 Then do:
 ```aws configure```
-AWS Access Key ID [None]: 
-AWS Secret Access Key [None]: 
+AWS Access Key ID [None]:
+AWS Secret Access Key [None]:
 Default region name [None]:
 Default output format [None]:
 
@@ -57,24 +57,24 @@ Default output format [None]:
 - Create a Page in Facebook.
 - Create an `Messenger-App` in Facebook-Developer and generate a `key` for you Page
 
-`CMS_API_TOKEN` 
-You will need a cms to handle your news content. Set it up as described in ```informant-cms```, then login as admin, generate a token. 
+`CMS_API_TOKEN`
+You will need a cms to handle your news content. Set it up as described in ```informant-cms```, then login as admin, generate a token.
 
 `CMS_API_URL`
 In `informant-cms` you create an api for your content, provide the url:
-CMS_BASE_URL/api/v1 
+CMS_BASE_URL/api/v1
 
-If your `yarn sls deploy` runs successfully: 
+If your `yarn sls deploy` runs successfully:
 - you will receive endpoints in your consle, grab the first one - ending with fb
-- go to your app on developers.facebook.com and setup a webhook, using the endpoint and the `FB_VERIFYTOKEN` you set up earlier in your `.env.yml`.   
-- in developers.facebook.com go to 'messenger' and select a page to subscribe your webhook to the page events 
+- go to your app on developers.facebook.com and setup a webhook, using the endpoint and the `FB_VERIFYTOKEN` you set up earlier in your `.env.yml`.
+- in developers.facebook.com go to 'messenger' and select a page to subscribe your webhook to the page events
 
 Now you can start chatting with your bot and develop new features.
 
 ## Setting persistent menu
-```FB_PAGETOKEN=<Your_Page_Token_From_.Env> node setMenu.js```
+```FB_PAGETOKEN=<Your_Page_Token_From_.Env> yarn set-menu```
 
-## Faster deploy for development 
+## Faster deploy for development
 `yarn sls deploy` can take a while.
 For development you can use choose which function to deploy. For example:
-`yarn sls deploy -f fbMessage`  
+`yarn sls deploy -f fbMessage`

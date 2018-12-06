@@ -13,8 +13,7 @@ env:
 cache: yarn
 
 script:
-  - echo "No tests :)"
-
+  - echo "No tests :("
 deploy:
   - provider: script
     skip_cleanup: true
