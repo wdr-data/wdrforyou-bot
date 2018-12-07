@@ -118,5 +118,11 @@ export default {
         persian: "Wieder anmelden",
         english: "Wieder anmelden",
         german: "Wieder anmelden",
-    }
+    },
+    greetings: {
+        arabic: "هنا تحصل على آخر الأخبار الموثوقة والدقيقة مباشرة على هاتفك.",
+        persian: "اينجا ميتوانيد اخبار موثق و تاییده شده را مستقيم بر روى موبايل خود دريافت كنيد .",
+        english: "Here you get the latest well researched and reliable News promtly and directly on you cellphone.",
+        german: "Hier bekommst Du super schnell aktuelle, relevante und verlässliche Nachrichten direkt auf Dein Handy.",
+    },
 }

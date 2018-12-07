@@ -16,6 +16,8 @@ const GET_STARTED_PAYLOAD = {
     action: 'subscriptions',
 };
 
+const greetings = [];
+
 const makeMenuLanguage = (locale, language) => {
     return {
         locale,
@@ -57,7 +59,7 @@ const makeMenuLanguage = (locale, language) => {
                     {
                         title: translations['unsubscribe'][language],
                         type: 'postback',
-                        payload: JSON.stringify({ action: 'subscriptions' }),
+                        payload: JSON.stringify({ action: 'unsubscribe' }),
                     },
                 ]
             },
@@ -69,6 +71,10 @@ const menu_options = [];
 for (const language of availableFbLanguages) {
     for (const locale of FbLanguageEnum[language]) {
         menu_options.push(makeMenuLanguage(locale, language));
+        greetings.push({
+            locale: locale,
+            text: translations.greetings[language],
+        });
     }
 }
 
@@ -77,10 +83,13 @@ const PERSISTENT_MENU_DATA = {
 };
 
 const GET_STARTED_DATA = {
-    'get_started':
-  {
-      payload: JSON.stringify(GET_STARTED_PAYLOAD),
-  },
+    'get_started': {
+        payload: JSON.stringify(GET_STARTED_PAYLOAD),
+    },
+};
+
+const GREETING_DATA = {
+    greeting: greetings,
 };
 
 
@@ -107,6 +116,18 @@ request.post({
         body: PERSISTENT_MENU_DATA,
     }).then(() => {
         console.log('Successfully set persistent menu');
+        request.post({
+            uri: MESSENGER_PROFILE_URL,
+            qs: {
+                'access_token': FB_PAGETOKEN,
+            },
+            json: true,
+            body: GREETING_DATA,
+        }).then(() => {
+            console.log('Successfully set greetings');
+        }).catch((error) => {
+            console.log('Setting greetings failed: ', error);
+        });
     }).catch((error) => {
         console.log('Setting persistent menu failed: ', error);
     });
