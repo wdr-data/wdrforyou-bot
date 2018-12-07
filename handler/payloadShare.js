@@ -15,5 +15,10 @@ export default async function(chat) {
             null,
             [ buttonUrl(callToAction, informantUrl) ]),
     ];
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Sharing', 'Share Menu Item').send();
+    }
+
     return chat.sendButtons(text, [ buttonShare(sharedContent) ]);
 }

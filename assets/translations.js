@@ -131,4 +131,22 @@ export default {
         english: "Here you get the latest well researched and reliable News promtly and directly on you cellphone.",
         german: "Hier bekommst Du super schnell aktuelle, relevante und verlässliche Nachrichten direkt auf Dein Handy.",
     },
+    subscriptionReturnAnalyticsYesButton: {
+        arabic: "Ja, ich stimme zu",
+        persian: "Ja, ich stimme zu",
+        english: "Ja, ich stimme zu",
+        german: "Ja, ich stimme zu",
+    },
+    subscriptionReturnAnalyticsNoButton: {
+        arabic: "Ohne Analytics",
+        persian: "Ohne Analytics",
+        english: "Ohne Analytics",
+        german: "Ohne Analytics",
+    },
+    subscriptionReturnDataPolicyButton: {
+        arabic: "Datenschutz",
+        persian: "Datenschutz",
+        english: "Datenschutz",
+        german: "Datenschutz",
+    },
 }

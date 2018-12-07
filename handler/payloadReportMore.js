@@ -1,6 +1,5 @@
 import request from 'request-promise-native';
 import urls from '../lib/urls';
-import { buttonPostback } from '../lib/facebook';
 
 const handler = async function(chat, payload) {
     const url = `${urls.report(payload.report)}`;
@@ -9,7 +8,9 @@ const handler = async function(chat, payload) {
 };
 
 const sendMore = async function(chat, report) {
-    await chat.track.event('Bot', 'Medien Button', report.headline).send();
+    if (chat.trackingEnabled) {
+        await chat.track.event('Report', 'Medien Button', report.headline).send();
+    }
 
     if (chat.language === 'german' && report.media) {
         await chat.sendAttachment(report.media);
