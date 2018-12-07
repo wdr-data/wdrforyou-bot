@@ -104,13 +104,6 @@ const sendDefaultReply = async (chat) => {
         }
 
         await chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
-
-        const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
-        try {
-            await lastDefaultReplies.create(chat.psid, {ttl});
-        } catch {
-            await lastDefaultReplies.update(chat.psid, 'ttl', ttl);
-        }
     }
 };
 
