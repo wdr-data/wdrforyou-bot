@@ -149,4 +149,28 @@ export default {
         english: "Datenschutz",
         german: "Datenschutz",
     },
+    shareBotText: {
+        arabic: "شارك خدمة INFOSforyou مع أصدقائك",
+        persian: "بسيار خوب ! به زودى اينفوز فور يو جديدترین اخبار را برای شما خواهد فرستاد.",
+        english: "Share INFOSforyou with your friends.",
+        german: "Teile den Service INFOSforyou mit Deinen Freunden",
+    },
+    shareBotTitle: {
+        arabic: "تعرف على INFOSforyou، خدمة الأخبار العاجلة من \"في دي إر فوريو\". الخدمة رائعة!",
+        persian: "سرویس اینفوز فور یو را برای دوستان به اشتراک بگذارید",
+        english: "Check out INFOSforyou, the recent Newsservice of WDRforyou. I really like it.",
+        german: "Schau Dir mal INFOSforyou an, den neuen Nachrichtenservice von WDRforyou. Ich finde das toll.",
+    },
+    shareBotSubtitle: {
+        arabic: "هنا تحصل على أخبار موثوقة ودقيقة مباشرة على هاتفك.",
+        persian: "اينفوز فور يو را حتما ببينيد ، سرويس خبرى جديد \" و د ار فور يو \".به نظر من خيلى عاليه .",
+        english: "Here you get well researched and reliable News directly on you cellphone.",
+        german: "Hier gibt es gut recherchierte, verlässliche Nachrichten direkt auf dein Handy.",
+    },
+    shareBotCallToAction: {
+        arabic: "دعونا نبدأ",
+        persian: "اينجا ميتوانيد اخبار موثق و تاییده شده را مستقيم بر روى موبايل خود دريافت كنيد .",
+        english: "Get started",
+        german: "Los geht's",
+    },
 }
