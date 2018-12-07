@@ -132,13 +132,14 @@ export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
     await chat.track.event('Bot', 'Abmeldung', chat.language).send();
     await removeLabels(chat);
-    try {
+
+    if (chat.subscribed) {
         await libSubscriptions.remove(chat.event.sender.id);
         return chat.sendButtons(
             chat.getTranslation(translations.unsubscribeMessage),
             [buttonPostback(chat.getTranslation(translations.reSubscribe), {action: 'subscriptions'})]
         );
-    } catch {
-        await chat.sendText('Du bist nicht angemeldet.');
+    } else {
+        await chat.sendText(chat.getTranslation(translations.notSubscribed));
     }
 };

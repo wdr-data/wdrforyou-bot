@@ -119,6 +119,12 @@ export default {
         english: "Wieder anmelden",
         german: "Wieder anmelden",
     },
+    notSubscribed: {
+        arabic: "Du bist nicht angemeldet.",
+        persian: "Du bist nicht angemeldet.",
+        english: "Du bist nicht angemeldet.",
+        german: "Du bist nicht angemeldet.",
+    },
     greetings: {
         arabic: "هنا تحصل على آخر الأخبار الموثوقة والدقيقة مباشرة على هاتفك.",
         persian: "اينجا ميتوانيد اخبار موثق و تاییده شده را مستقيم بر روى موبايل خود دريافت كنيد .",
