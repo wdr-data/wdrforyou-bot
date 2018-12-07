@@ -1,6 +1,7 @@
 import { buttonPostback, listElement } from '../lib/facebook';
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import translations from '../assets/translations';
+import { getFaq } from "./payloadFAQ";
 
 const LanguageEnum = {
     ARABIC: 'arabic',
@@ -116,29 +117,44 @@ const removeLabels = async function(chat) {
 };
 
 export const subscribe = async function(chat, payload) {
-    if (chat.subscribed) {
-        await chat.track.event('Bot', 'Abmeldung', chat.language).send();
-    }
     await removeLabels(chat);
 
-    await chat.track.event('Bot', 'Anmeldung', payload.subscription).send();
     await chat.addLabel(payload.subscription);
     await enableSubscription(chat.event.sender.id, { language: payload.subscription });
 
-    return chat.sendText(translations.subscriptionReturn[payload.subscription]);
+    chat.language = payload.subscription;
+    const subscriptionReturn = await getFaq(chat, 'subscriptionReturn');
+
+    const buttons = [
+        buttonPostback(
+            chat.getTranslation(translations.subscriptionReturnAnalyticsYesButton),
+            {action: 'analyticsAccept'},
+        ),
+        buttonPostback(
+            chat.getTranslation(translations.subscriptionReturnAnalyticsNoButton),
+            {action: 'analyticsDecline'},
+        ),
+        buttonPostback(
+            chat.getTranslation(translations.subscriptionReturnDataPolicyButton),
+            {action: 'analyticsPolicy'},
+        ),
+    ];
+
+    return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);
 };
 
 export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
-    await chat.track.event('Bot', 'Abmeldung', chat.language).send();
+
     await removeLabels(chat);
-    try {
+
+    if (chat.subscribed) {
         await libSubscriptions.remove(chat.event.sender.id);
         return chat.sendButtons(
             chat.getTranslation(translations.unsubscribeMessage),
             [buttonPostback(chat.getTranslation(translations.reSubscribe), {action: 'subscriptions'})]
         );
-    } catch {
-        await chat.sendText('Du bist nicht angemeldet.');
+    } else {
+        await chat.sendText(chat.getTranslation(translations.notSubscribed));
     }
 };

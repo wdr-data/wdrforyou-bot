@@ -54,7 +54,7 @@ const messageHandler = async (event, context) => {
 
         const msgEvent = payload.entry[0].messaging[0];
         chat = new Chat(msgEvent);
-        await chat.loadLanguage();
+        await chat.loadSettings();
 
         await handleMessage(event, context, chat, msgEvent);
     } catch (error) {
@@ -80,8 +80,6 @@ const sendDefaultReply = async (chat) => {
         sendReply = true;
     }
 
-    await chat.track.event('Testing', 'Standard-Antwort').send();
-
     if (sendReply) {
         const defaultReply = await getFaq(chat, 'defaultReply');
 
@@ -104,13 +102,6 @@ const sendDefaultReply = async (chat) => {
         }
 
         await chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
-
-        const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
-        try {
-            await lastDefaultReplies.create(chat.psid, {ttl});
-        } catch {
-            await lastDefaultReplies.update(chat.psid, 'ttl', ttl);
-        }
     }
 };
 
@@ -145,7 +136,9 @@ const handleMessage = async (event, context, chat) => {
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
         if ('sticker_id' in msgEvent.message && msgEvent.message.sticker_id === 369239263222822) {
-            await chat.track.event('Testing', 'Like-Button').send();
+            if (chat.trackingEnabled) {
+                await chat.track.event('Testing', 'Like-Button').send();
+            }
             return chat.sendText(`👌`);
         } else {
             return sendDefaultReply(chat);
