@@ -1,19 +1,20 @@
 import { buttonShare, buttonUrl, genericElement } from '../lib/facebook';
+import translations from "../assets/translations";
 
 export default async function(chat) {
-    const text = `Teile den Service INFOSforyou.`;
-    const title = `Abboniere INFOSforyou, den Nachrichtenservice von WDRforyou.`;
-    const subtitle = `Hier gibt es gut recherchierte, verlässliche Nachrichten direkt auf dein Handy.`;
+    const text = chat.getTranslation(translations.shareBotText);
+    const title = chat.getTranslation(translations.shareBotTitle);
+    const subtitle = chat.getTranslation(translations.shareBotSubtitle);
 
-    const callToAction = `Hier geht’s los`;
-    const informantUrl = `https://www.m.me/1785191631726148`;
+    const callToAction = chat.getTranslation(translations.shareBotCallToAction);
+    const targetUrl = `https://www.m.me/WDRforyou`;
 
     const sharedContent = [
         genericElement(
             title,
             subtitle,
             null,
-            [ buttonUrl(callToAction, informantUrl) ]),
+            [ buttonUrl(callToAction, targetUrl) ]),
     ];
 
     if (chat.trackingEnabled) {
