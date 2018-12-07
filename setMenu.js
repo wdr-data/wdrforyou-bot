@@ -42,11 +42,6 @@ const makeMenuLanguage = (locale, language) => {
                         payload: JSON.stringify({ action: 'latest_reports' }),
                     },
                     {
-                        title: translations['WDRforyou'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'link_WDRforyou' }),
-                    },
-                    {
                         title: translations['aboutService'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'faq', handle: 'aboutServiceFull' }),
@@ -55,6 +50,11 @@ const makeMenuLanguage = (locale, language) => {
                         title: translations['companyDetails'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'faq', handle: 'companyDetailsFull' }),
+                    },
+                    {
+                        title: translations['subscriptionReturnDataPolicyButton'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'analyticsPolicy' }),
                     },
                     {
                         title: translations['unsubscribe'][language],
