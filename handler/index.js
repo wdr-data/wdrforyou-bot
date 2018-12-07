@@ -10,5 +10,9 @@ export default {
         'share': require('./payloadShare').default,
         'link_WDRforyou': require('./payloadLink').linkWdrForYou,
         'faq': require('./payloadFAQ').handler,
+        'analyticsAccept': require('./payloadAnalytics').accept,
+        'analyticsDecline': require('./payloadAnalytics').decline,
+        'analyticsPolicy': require('./payloadAnalytics').policy,
+        'analyticsChoose': require('./payloadAnalytics').choose,
     },
 };
