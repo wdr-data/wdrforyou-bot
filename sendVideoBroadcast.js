@@ -6,7 +6,7 @@ async function send(videoUrl) {
         videoUrl,
         'video',
         100000
-    )
+    );
     console.log(attachmentID);
 
     await sendBroadcastMediaTemplate(
@@ -20,4 +20,4 @@ async function send(videoUrl) {
     )
 }
 
-send(process.argv[2])
+send(process.argv[2]);
