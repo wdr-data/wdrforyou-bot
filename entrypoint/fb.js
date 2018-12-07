@@ -56,11 +56,11 @@ const messageHandler = async (event, context) => {
         chat = new Chat(msgEvent);
         await chat.loadLanguage();
 
-        return handleMessage(event, context, chat, msgEvent);
+        await handleMessage(event, context, chat, msgEvent);
     } catch (error) {
         try {
             if (chat) {
-                return chat.sendText(chat.getTranslation(translations.errorMessage));
+                await chat.sendText(chat.getTranslation(translations.errorMessage));
             }
         } catch (e) {
             console.error('Reporting error to user failed:', e);

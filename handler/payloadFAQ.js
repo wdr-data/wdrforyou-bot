@@ -25,7 +25,7 @@ export const getFaq = async function(chat, handle) {
 };
 
 export const sendFaq = async function(chat, handle) {
-    const faqTranslation = getFaq(chat, handle);
+    const faqTranslation = await getFaq(chat, handle);
 
     return chat.sendFragments(faqTranslation.fragments);
 };
