@@ -98,11 +98,7 @@ const handleMessage = async (event, context, chat) => {
         let sendReply;
         try {
             const lastReply = await lastDefaultReplies.load(msgEvent.sender.id);
-            if (lastReply.ttl > Math.floor(Date.now() / 1000)) {
-                sendReply = false;
-            } else {
-                sendReply = true;
-            }
+            sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
         } catch {
             sendReply = true;
         }
