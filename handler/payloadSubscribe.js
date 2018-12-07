@@ -134,8 +134,11 @@ export const unsubscribe = async function(chat) {
     await removeLabels(chat);
     try {
         await libSubscriptions.remove(chat.event.sender.id);
-        return chat.sendText('OK');
+        return chat.sendButtons(
+            chat.getTranslation(translations.unsubscribeMessage),
+            [buttonPostback(chat.getTranslation(translations.reSubscribe), {action: 'subscribe'})]
+        );
     } catch {
-        return chat.sendText('Keine Anmeldung gefunden.')
+        await chat.sendText('Du bist nicht angemeldet.');
     }
 };

@@ -107,4 +107,16 @@ export default {
         english: "Subscribe INFOSforyou",
         german: "Anmelden INFOSforyou",
     },
+    unsubscribeMessage: {
+        arabic: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        persian: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        english: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        german: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+    },
+    reSubscribe: {
+        arabic: "Wieder anmelden",
+        persian: "Wieder anmelden",
+        english: "Wieder anmelden",
+        german: "Wieder anmelden",
+    }
 }
