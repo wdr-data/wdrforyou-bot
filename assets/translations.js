@@ -82,5 +82,11 @@ export default {
         persian: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
         english: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
         german: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+    },
+    errorMessage: {
+        arabic: "Es ist ein Fehler aufgetreten :(",
+        persian: "Es ist ein Fehler aufgetreten :(",
+        english: "Es ist ein Fehler aufgetreten :(",
+        german: "Es ist ein Fehler aufgetreten :(",
     }
 }

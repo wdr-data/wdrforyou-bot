@@ -59,7 +59,7 @@ const messageHandler = async (event, context) => {
     } catch (error) {
         try {
             if (chat) {
-                return chat.sendText('Da ist was schief gelaufen.');
+                return chat.sendText(chat.getTranslation(translations.errorMessage));
             }
         } catch (e) {
             console.error('Reporting error to user failed:', e);
@@ -90,7 +90,7 @@ const handleMessage = async (event, context, chat) => {
         if (replyPayload.action in handler.payloads) {
             return handler.payloads[replyPayload.action](chat, replyPayload);
         }
-        return chat.sendText(`Da ist was schief gelaufen.`);
+        return chat.sendText(chat.getTranslation(translations.errorMessage));
     }
 
     if ('text' in msgEvent.message) {
@@ -125,12 +125,13 @@ const handleMessage = async (event, context, chat) => {
             await chat.track.event('Testing', 'Like-Button').send();
             return chat.sendText(`👌`);
         } else {
-            return chat.sendText(`Sorry, hab meine Brille nicht auf`);
+            return chat.sendText(chat.getTranslation(translations.defaultReply));
         }
     } else if (
-        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio'
+        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
+        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'video'
     ) {
-        return chat.sendText(`Das kann ich leider nicht anhören`);
+        return chat.sendText(chat.getTranslation(translations.defaultReply));
     }
 };
 
