@@ -2,24 +2,30 @@ import rp from 'request-promise-native';
 import urls from '../lib/urls';
 
 
-export const sendFaq = async function(chat, slug) {
+export const getFaq = async function(chat, handle) {
     const faqs = await rp.get({
         uri: urls.faqs,
         qs: {
-            slug,
+            handle,
         },
         json: true,
     });
 
     if (faqs.length === 0) {
-        throw new Error(`Could not find FAQ with slug ${slug}`);
+        throw new Error(`Could not find FAQ with handle ${handle}`);
     }
 
     const faqTranslation = faqs[0][chat.language];
 
     if (!faqTranslation) {
-        throw new Error(`Could not find FAQ Translation with slug ${slug} and language ${chat.language}`);
+        throw new Error(`Could not find FAQ Translation with handle ${handle} and language ${chat.language}`);
     }
+
+    return faqTranslation;
+};
+
+export const sendFaq = async function(chat, handle) {
+    const faqTranslation = getFaq(chat, handle);
 
     for (const fragment of faqTranslation.fragments) {
         await chat.sendText(fragment.text);
@@ -30,6 +36,6 @@ export const sendFaq = async function(chat, slug) {
 };
 
 
-export const companyDetails = async (chat) => sendFaq(chat, 'impressum');
+export const companyDetails = async (chat) => sendFaq(chat, 'companyDetailsFull');
 
-export const about = async (chat) => sendFaq(chat, 'uber');
+export const about = async (chat) => sendFaq(chat, 'aboutServiceFull');
