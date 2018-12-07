@@ -136,7 +136,7 @@ export const unsubscribe = async function(chat) {
         await libSubscriptions.remove(chat.event.sender.id);
         return chat.sendButtons(
             chat.getTranslation(translations.unsubscribeMessage),
-            [buttonPostback(chat.getTranslation(translations.reSubscribe), {action: 'subscribe'})]
+            [buttonPostback(chat.getTranslation(translations.reSubscribe), {action: 'subscriptions'})]
         );
     } catch {
         await chat.sendText('Du bist nicht angemeldet.');
