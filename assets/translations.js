@@ -133,20 +133,20 @@ export default {
     },
     subscriptionReturnAnalyticsYesButton: {
         arabic: "Ja, ich stimme zu",
-        persian: "Ja, ich stimme zu",
-        english: "Ja, ich stimme zu",
+        persian: "بلی موافق ام",
+        english: "Yes, I consent",
         german: "Ja, ich stimme zu",
     },
     subscriptionReturnAnalyticsNoButton: {
         arabic: "Ohne Analytics",
-        persian: "Ohne Analytics",
-        english: "Ohne Analytics",
+        persian: "بدون آنالیتیکس",
+        english: "No Analytics",
         german: "Ohne Analytics",
     },
     subscriptionReturnDataPolicyButton: {
         arabic: "Datenschutz",
-        persian: "Datenschutz",
-        english: "Datenschutz",
+        persian: "حفظ اطلاعات ",
+        english: "Data Policy",
         german: "Datenschutz",
     },
     shareBotText: {
