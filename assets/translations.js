@@ -1,7 +1,7 @@
 export default {
     subscriptionIntro: {
         arabic: "اختر لغتك المفضلة",
-        persian: "فارسی",
+        persian: "زبان خود را انتخاب کنید",
         english: "Choose your language",
         german: "Wähle deine Sprache",
     },
