@@ -30,7 +30,7 @@ export async function decline(chat) {
 }
 
 export async function choose(chat) {
-    const chooseAnalyics = await getFaq(chat, 'dataPolicy');
+    const chooseAnalyics = await getFaq(chat, 'chooseAnalytics');
 
     const buttons = [
         buttonPostback(
