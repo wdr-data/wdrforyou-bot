@@ -82,5 +82,41 @@ export default {
         persian: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
         english: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
         german: "Hallo, dies ist eine automatische Antwort von INFOSforyou. Die Redaktion von WDRforyou gibt sich Mühe die meisten Fragen von Usern zu bearbeiten, aber es sind sehr sehr viele. Schau doch mal auf unserer Seite vorbei. Vielleicht findest Du ja auch da Deine Antworten.",
+    },
+    errorMessage: {
+        arabic: "Es ist ein Fehler aufgetreten :(",
+        persian: "Es ist ein Fehler aufgetreten :(",
+        english: "Es ist ein Fehler aufgetreten :(",
+        german: "Es ist ein Fehler aufgetreten :(",
+    },
+    defaultSpeakToYesButton: {
+        arabic: "بعث رسالة",
+        persian: "برقراری تماس",
+        english: "Get in touch",
+        german: "Kontakt aufnehmen",
+    },
+    defaultSpeakToNoButton: {
+        arabic: "غير مهم",
+        persian: "مهم نیست",
+        english: "Don't bother",
+        german: "Nicht so wichtig",
+    },
+    defaultNotSubscribedButton: {
+        arabic: "اشتراك في INFOSforyou",
+        persian: "وردو برای اینفوز فور یو",
+        english: "Subscribe INFOSforyou",
+        german: "Anmelden INFOSforyou",
+    },
+    unsubscribeMessage: {
+        arabic: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        persian: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        english: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+        german: "Alles klar! Ab jetzt bekommst du keine Nachrichten mehr von INFOSforyou.",
+    },
+    reSubscribe: {
+        arabic: "Wieder anmelden",
+        persian: "Wieder anmelden",
+        english: "Wieder anmelden",
+        german: "Wieder anmelden",
     }
 }

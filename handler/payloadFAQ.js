@@ -1,16 +1,33 @@
-export const companyDetails = async function(chat) {
-    chat.sendText(`Für die Nutzung bei Facebook gelten die Datenschutz-Richtlinien von Facebook. ` +
-        `Mein Programmcode hält sich an die Datenschutzbestimmungen des Westdeutschen Rundfunks: ` +
-        `https://www1.wdr.de/hilfe/datenschutz102.html \n\n` +
-        `Impressum\n` +
-        `Redaktion: WDRforyou, Sun-Hie Kunert, Male Stüssel\n` +
-        `Umsetzung: Lisa Achenbach, Patricia Ennenbach, Jannes Höke, Christian Jörres\n` +
-        `https://www.facebook.com/pg/WDRforyou/about/?ref=page_internal`);
+import rp from 'request-promise-native';
+import urls from '../lib/urls';
+
+
+export const getFaq = async function(chat, handle) {
+    const faqs = await rp.get({
+        uri: urls.faqs,
+        qs: {
+            handle,
+        },
+        json: true,
+    });
+
+    if (faqs.length === 0) {
+        throw new Error(`Could not find FAQ with handle ${handle}`);
+    }
+
+    const faqTranslation = faqs[0][chat.language];
+
+    if (!faqTranslation) {
+        throw new Error(`Could not find FAQ Translation with handle ${handle} and language ${chat.language}`);
+    }
+
+    return faqTranslation;
 };
 
-export const about = async function(chat) {
-    return chat.sendText(`INFOSforyou ist ein Nachrichtenservice von WDRforyou.\n` +
-        `Die Redaktion des WDR, die Infos für Flüchtlinge und Interessierte macht. ` +
-        `Wenn Du diesen Messengerservice abonnierst, bekommst Du schnell gut recherchierte ` +
-        `und verlässliche Nachrichten direkt auf dein Handy.`);
+export const sendFaq = async function(chat, handle) {
+    const faqTranslation = await getFaq(chat, handle);
+
+    return chat.sendFragments(faqTranslation.fragments);
 };
+
+export const handler = async (chat, payload) => sendFaq(chat, payload.handle);

@@ -1,8 +1,9 @@
-import { Chat, sendBroadcastButtons, guessAttachmentType } from '../lib/facebook';
+import {Chat, sendBroadcastButtons, guessAttachmentType, buttonPostback} from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import translations from '../assets/translations';
+import {getFaq} from "../handler/payloadFAQ";
 
 
 export const verify = async (event, context) => {
@@ -55,16 +56,61 @@ const messageHandler = async (event, context) => {
         chat = new Chat(msgEvent);
         await chat.loadLanguage();
 
-        return handleMessage(event, context, chat, msgEvent);
+        await handleMessage(event, context, chat, msgEvent);
     } catch (error) {
         try {
             if (chat) {
-                return chat.sendText('Da ist was schief gelaufen.');
+                await chat.sendText(chat.getTranslation(translations.errorMessage));
             }
         } catch (e) {
             console.error('Reporting error to user failed:', e);
         }
         throw error;
+    }
+};
+
+const sendDefaultReply = async (chat) => {
+    const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
+    let sendReply;
+
+    try {
+        const lastReply = await lastDefaultReplies.load(chat.psid);
+        sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
+    } catch {
+        sendReply = true;
+    }
+
+    await chat.track.event('Testing', 'Standard-Antwort').send();
+
+    if (sendReply) {
+        const defaultReply = await getFaq(chat, 'defaultReply');
+
+        const buttons = [
+            buttonPostback(
+                chat.getTranslation(translations.defaultSpeakToYesButton),
+                {action: 'faq', handle: 'defaultSpeakToYes'},
+            ),
+            buttonPostback(
+                chat.getTranslation(translations.defaultSpeakToNoButton),
+                {action: 'faq', handle: 'defaultSpeakToNo'},
+            ),
+        ];
+
+        if (!chat.subscribed) {
+            buttons.push(buttonPostback(
+                chat.getTranslation(translations.defaultNotSubscribedButton),
+                {action: 'subscriptions'},
+            ))
+        }
+
+        await chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
+
+        const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
+        try {
+            await lastDefaultReplies.create(chat.psid, {ttl});
+        } catch {
+            await lastDefaultReplies.update(chat.psid, 'ttl', ttl);
+        }
     }
 };
 
@@ -90,34 +136,11 @@ const handleMessage = async (event, context, chat) => {
         if (replyPayload.action in handler.payloads) {
             return handler.payloads[replyPayload.action](chat, replyPayload);
         }
-        return chat.sendText(`Da ist was schief gelaufen.`);
+        return chat.sendText(chat.getTranslation(translations.errorMessage));
     }
 
     if ('text' in msgEvent.message) {
-        const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
-        let sendReply;
-        try {
-            const lastReply = await lastDefaultReplies.load(msgEvent.sender.id);
-            if (lastReply.ttl > Math.floor(Date.now() / 1000)) {
-                sendReply = false;
-            } else {
-                sendReply = true;
-            }
-        } catch {
-            sendReply = true;
-        }
-
-        await chat.track.event('Testing', 'Standard-Antwort').send();
-        if (sendReply) {
-            await chat.sendText(chat.getTranslation(translations.defaultReply));
-            const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
-            try {
-                await lastDefaultReplies.create(msgEvent.sender.id, {ttl});
-            } catch {
-                await lastDefaultReplies.update(msgEvent.sender.id, 'ttl', ttl);
-            }
-        }
-        return;
+        return sendDefaultReply(chat);
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
@@ -125,12 +148,13 @@ const handleMessage = async (event, context, chat) => {
             await chat.track.event('Testing', 'Like-Button').send();
             return chat.sendText(`👌`);
         } else {
-            return chat.sendText(`Sorry, hab meine Brille nicht auf`);
+            return sendDefaultReply(chat);
         }
     } else if (
-        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio'
+        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
+        'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'video'
     ) {
-        return chat.sendText(`Das kann ich leider nicht anhören`);
+        return sendDefaultReply(chat);
     }
 };
 
