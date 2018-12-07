@@ -169,7 +169,7 @@ export default {
     },
     shareBotCallToAction: {
         arabic: "دعونا نبدأ",
-        persian: "اينجا ميتوانيد اخبار موثق و تاییده شده را مستقيم بر روى موبايل خود دريافت كنيد .",
+        persian: "شروع کن ",
         english: "Get started",
         german: "Los geht's",
     },
