@@ -88,5 +88,23 @@ export default {
         persian: "Es ist ein Fehler aufgetreten :(",
         english: "Es ist ein Fehler aufgetreten :(",
         german: "Es ist ein Fehler aufgetreten :(",
-    }
+    },
+    defaultSpeakToYesButton: {
+        arabic: "بعث رسالة",
+        persian: "برقراری تماس",
+        english: "Get in touch",
+        german: "Kontakt aufnehmen",
+    },
+    defaultSpeakToNoButton: {
+        arabic: "غير مهم",
+        persian: "مهم نیست",
+        english: "Don't bother",
+        german: "Nicht so wichtig",
+    },
+    defaultNotSubscribedButton: {
+        arabic: "اشتراك في INFOSforyou",
+        persian: "وردو برای اینفوز فور یو",
+        english: "Subscribe INFOSforyou",
+        german: "Anmelden INFOSforyou",
+    },
 }
