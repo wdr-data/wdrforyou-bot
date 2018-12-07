@@ -9,7 +9,6 @@ export default {
         'unsubscribe': require('./payloadSubscribe').unsubscribe,
         'share': require('./payloadShare').default,
         'link_WDRforyou': require('./payloadLink').linkWdrForYou,
-        'about': require('./payloadFAQ').about,
-        'companyDetails': require('./payloadFAQ').companyDetails,
+        'faq': require('./payloadFAQ').handler,
     },
 };

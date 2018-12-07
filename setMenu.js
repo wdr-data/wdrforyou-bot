@@ -47,12 +47,12 @@ const makeMenuLanguage = (locale, language) => {
                     {
                         title: translations['aboutService'][language],
                         type: 'postback',
-                        payload: JSON.stringify({ action: 'about' }),
+                        payload: JSON.stringify({ action: 'faq', handle: 'aboutServiceFull' }),
                     },
                     {
                         title: translations['companyDetails'][language],
                         type: 'postback',
-                        payload: JSON.stringify({ action: 'companyDetails' }),
+                        payload: JSON.stringify({ action: 'faq', handle: 'companyDetailsFull' }),
                     },
                     {
                         title: translations['unsubscribe'][language],

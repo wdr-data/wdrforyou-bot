@@ -27,15 +27,7 @@ export const getFaq = async function(chat, handle) {
 export const sendFaq = async function(chat, handle) {
     const faqTranslation = getFaq(chat, handle);
 
-    for (const fragment of faqTranslation.fragments) {
-        await chat.sendText(fragment.text);
-        if (fragment.media) {
-            await chat.sendAttachment(fragment.media);
-        }
-    }
+    return chat.sendFragments(faqTranslation.fragments);
 };
 
-
-export const companyDetails = async (chat) => sendFaq(chat, 'companyDetailsFull');
-
-export const about = async (chat) => sendFaq(chat, 'aboutServiceFull');
+export const handler = async (chat, payload) => sendFaq(chat, payload.handle);
