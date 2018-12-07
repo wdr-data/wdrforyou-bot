@@ -129,11 +129,15 @@ export const subscribe = async function(chat, payload) {
         buttonPostback(
             chat.getTranslation(translations.subscriptionReturnAnalyticsYesButton),
             {action: 'analyticsAccept'},
+        ),
+        buttonPostback(
             chat.getTranslation(translations.subscriptionReturnAnalyticsNoButton),
             {action: 'analyticsDecline'},
+        ),
+        buttonPostback(
             chat.getTranslation(translations.subscriptionReturnDataPolicyButton),
             {action: 'analyticsPolicy'},
-        )
+        ),
     ];
 
     return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);

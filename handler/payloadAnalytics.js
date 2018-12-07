@@ -36,11 +36,15 @@ export async function choose(chat) {
         buttonPostback(
             chat.getTranslation(translations.subscriptionReturnAnalyticsYesButton),
             {action: 'analyticsAccept'},
+        ),
+        buttonPostback(
             chat.getTranslation(translations.subscriptionReturnAnalyticsNoButton),
             {action: 'analyticsDecline'},
+        ),
+        buttonPostback(
             chat.getTranslation(translations.subscriptionReturnDataPolicyButton),
             {action: 'analyticsPolicy'},
-        )
+        ),
     ];
 
     return chat.sendFragmentsWithButtons(chooseAnalyics.fragments, buttons);
