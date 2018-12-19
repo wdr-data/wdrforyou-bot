@@ -13,10 +13,19 @@ export async function accept(chat) {
     }
 
     const thanksAnalytics = await getFaq(chat, 'thanksAnalytics');
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Interactions', 'Analytics', 'Allowed').send();
+    }
+
     return chat.sendFragments(thanksAnalytics.fragments);
 }
 
 export async function decline(chat) {
+    if (chat.trackingEnabled) {
+        await chat.track.event('Interactions', 'Analytics', 'Denied').send();
+    }
+
     const tracking = new DynamoDbCrud(process.env.DYNAMODB_TRACKING);
 
     try {

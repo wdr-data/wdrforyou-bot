@@ -26,6 +26,10 @@ export const getFaq = async function(chat, handle) {
 };
 
 export const sendFaq = async function(chat, handle) {
+    if (chat.trackingEnabled) {
+        await chat.track.event('Interaction', 'Payload', handle).send();
+    }
+
     const faqTranslation = await getFaq(chat, handle);
 
     return chat.sendFragments(faqTranslation.fragments);

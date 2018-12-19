@@ -66,6 +66,9 @@ const sendReport = async function(chat, report) {
         return chat.sendText(message);
     }
 
+    if (chat.trackingEnabled) {
+        await chat.track.event('Report', 'Full report', report.headline).send();
+    }
     return chat.sendButtons(message, buttons);
 };
 
