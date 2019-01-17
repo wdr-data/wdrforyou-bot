@@ -9,7 +9,7 @@ const handler = async function(chat, payload) {
 
 const sendMore = async function(chat, report) {
     if (chat.trackingEnabled) {
-        await chat.track.event('Report', 'Medien Button', report.headline).send();
+        await chat.track.event('Report', 'Media', report.headline).send();
     }
 
     if (chat.language === 'german' && report.media) {

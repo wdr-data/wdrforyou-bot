@@ -76,6 +76,9 @@ const sendDefaultReply = async (chat) => {
     try {
         const lastReply = await lastDefaultReplies.load(chat.psid);
         sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
+        if (chat.trackingEnabled) {
+            await chat.track.event('Interaction', 'Conversation', chat.language).send();
+        }
     } catch {
         sendReply = true;
     }
@@ -100,7 +103,9 @@ const sendDefaultReply = async (chat) => {
                 {action: 'subscriptions'},
             ))
         }
-
+        if (chat.trackingEnabled) {
+            await chat.track.event('DefaultReply', 'QuestionForContact', chat.language).send();
+        }
         await chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
     }
 };
@@ -137,7 +142,7 @@ const handleMessage = async (event, context, chat) => {
     ) {
         if ('sticker_id' in msgEvent.message && msgEvent.message.sticker_id === 369239263222822) {
             if (chat.trackingEnabled) {
-                await chat.track.event('Testing', 'Like-Button').send();
+                await chat.track.event('Interaction', 'Like-Button', chat.language).send();
             }
             return chat.sendText(`👌`);
         } else {

@@ -26,8 +26,12 @@ export const getFaq = async function(chat, handle) {
 };
 
 export const sendFaq = async function(chat, handle) {
-    if (chat.trackingEnabled) {
-        await chat.track.event('Interaction', 'Payload', handle).send();
+     {
+        if (handle === 'defaultSpeakToYes' || handle === 'defaultSpeakToNo') {
+            await chat.track.event('DefaultReply', handle, chat.language).send();
+        } else {
+            await chat.track.event('Interaction', handle, chat.language).send();
+        }
     }
 
     const faqTranslation = await getFaq(chat, handle);
