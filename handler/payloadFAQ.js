@@ -26,7 +26,7 @@ export const getFaq = async function(chat, handle) {
 };
 
 export const sendFaq = async function(chat, handle) {
-     {
+    if (chat.trackingEnabled) {
         if (handle === 'defaultSpeakToYes' || handle === 'defaultSpeakToNo') {
             await chat.track.event('DefaultReply', handle, chat.language).send();
         } else {
