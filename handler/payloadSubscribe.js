@@ -98,6 +98,9 @@ export const subscriptionList = async function(chat) {
     await chat.sendText(
         Object.values(translations.subscriptionIntro).join('\n')
     );
+    if (chat.trackingEnabled) {
+        await chat.track.event('Subscription', 'Show options', chat.language).send();
+    }
 
     return chat.sendList(
         elements,
@@ -140,6 +143,10 @@ export const subscribe = async function(chat, payload) {
         ),
     ];
 
+    if (chat.trackingEnabled) {
+        await chat.track.event('Subscription', 'Subscribe', chat.language).send();
+    }
+
     return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);
 };
 
@@ -147,6 +154,10 @@ export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
 
     await removeLabels(chat);
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Subscription', 'Unsubscribe', chat.language).send();
+    }
 
     if (chat.subscribed) {
         await libSubscriptions.remove(chat.event.sender.id);
