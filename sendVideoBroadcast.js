@@ -13,7 +13,7 @@ async function send(videoUrl) {
         'video',
         attachmentID,
         [buttonPostback(
-            'Anmelden',
+            '👉 Anmelden 👈',
             { action: 'subscriptions'}
         )],
         true
