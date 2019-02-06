@@ -14,9 +14,7 @@ export async function accept(chat) {
 
     const thanksAnalytics = await getFaq(chat, 'thanksAnalytics');
 
-    if (chat.trackingEnabled) {
-        await chat.track.event('Analytics', 'Allowed', chat.language).send();
-    }
+    await chat.track.event('Analytics', 'Allowed', chat.language).send();
 
     return chat.sendFragments(thanksAnalytics.fragments);
 }
