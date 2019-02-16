@@ -14,5 +14,6 @@ export default {
         'analyticsDecline': require('./payloadAnalytics').decline,
         'analyticsPolicy': require('./payloadAnalytics').policy,
         'analyticsChoose': require('./payloadAnalytics').choose,
+        'defaultReply': require('./payloadDefaultReply').default,
     },
 };

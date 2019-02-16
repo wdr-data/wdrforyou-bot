@@ -161,4 +161,10 @@ export default {
         english: "Get started",
         german: "Los geht's",
     },
+    defaultReplyTrigger: {
+        arabic: "Sent message",
+        persian: "Sent message",
+        english: "Sent message",
+        german: "Nachricht gesendet",
+    },
 }

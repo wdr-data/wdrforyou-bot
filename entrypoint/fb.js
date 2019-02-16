@@ -84,29 +84,13 @@ const sendDefaultReply = async (chat) => {
     }
 
     if (sendReply) {
-        const defaultReply = await getFaq(chat, 'defaultReply');
-
-        const buttons = [
-            buttonPostback(
-                chat.getTranslation(translations.defaultSpeakToYesButton),
-                {action: 'faq', handle: 'defaultSpeakToYes'},
-            ),
-            buttonPostback(
-                chat.getTranslation(translations.defaultSpeakToNoButton),
-                {action: 'faq', handle: 'defaultSpeakToNo'},
-            ),
-        ];
-
-        if (!chat.subscribed) {
-            buttons.push(buttonPostback(
-                chat.getTranslation(translations.defaultNotSubscribedButton),
-                {action: 'subscriptions'},
-            ))
-        }
+        return handler.payloads['defaultReply'](chat, 'defaultReply')
+    } else {
         if (chat.trackingEnabled) {
             await chat.track.event('DefaultReply', 'QuestionForContact', chat.language).send();
         }
-        await chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
+
+        return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger))
     }
 };
 
