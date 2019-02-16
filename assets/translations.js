@@ -167,4 +167,10 @@ export default {
         english: "Sent message",
         german: "Nachricht gesendet",
     },
+    settings: {
+        arabic: "⚙️ Settings",
+        persian: "⚙️ Settings",
+        english: "⚙️ Settings",
+        german: "⚙️ Einstellungen",
+    },
 }
