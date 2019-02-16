@@ -37,6 +37,11 @@ const makeMenuLanguage = (locale, language) => {
                         payload: JSON.stringify({ action: 'latest_reports' }),
                     },
                     {
+                        title: translations['defaultSpeakToYesButton'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'defaultReply' }),
+                    },
+                    {
                         title: translations['aboutService'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'faq', handle: 'aboutServiceFull' }),
