@@ -24,7 +24,7 @@ export default async function(chat, handle) {
         ))
     }
     if (chat.trackingEnabled) {
-        await chat.track.event('DefaultReply', 'QuestionForContact', chat.language).send();
+        await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
     }
     return chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
 }

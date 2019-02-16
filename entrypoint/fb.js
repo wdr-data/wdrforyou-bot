@@ -76,9 +76,6 @@ const sendDefaultReply = async (chat) => {
     try {
         const lastReply = await lastDefaultReplies.load(chat.psid);
         sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
-        if (chat.trackingEnabled) {
-            await chat.track.event('Interaction', 'Conversation', chat.language).send();
-        }
     } catch {
         sendReply = true;
     }
@@ -87,7 +84,7 @@ const sendDefaultReply = async (chat) => {
         return handler.payloads['defaultReply'](chat, 'defaultReply')
     } else {
         if (chat.trackingEnabled) {
-            await chat.track.event('DefaultReply', 'QuestionForContact', chat.language).send();
+            await chat.track.event('Conversation', 'Ongoing', chat.language).send();
         }
 
         return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger))
