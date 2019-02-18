@@ -28,11 +28,6 @@ const makeMenuLanguage = (locale, language) => {
                 payload: JSON.stringify({ action: 'share' }),
             },
             {
-                title: translations['changeLanguage'][language],
-                type: 'postback',
-                payload: JSON.stringify({ action: 'subscriptions' }),
-            },
-            {
                 title: translations['about'][language],
                 type: 'nested',
                 call_to_actions: [
@@ -40,6 +35,11 @@ const makeMenuLanguage = (locale, language) => {
                         title: translations['latestReports'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'latest_reports' }),
+                    },
+                    {
+                        title: translations['writeMessage'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'defaultReply' }),
                     },
                     {
                         title: translations['aboutService'][language],
@@ -55,6 +55,22 @@ const makeMenuLanguage = (locale, language) => {
                         title: translations['subscriptionReturnDataPolicyButton'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'analyticsPolicy' }),
+                    }
+                ]
+            },
+            {
+                title: translations['settings'][language],
+                type: 'nested',
+                call_to_actions: [
+                    {
+                        title: translations['changeLanguage'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'subscriptions' }),
+                    },
+                    {
+                        title: translations['subscribe'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'subscriptions' }),
                     },
                     {
                         title: translations['unsubscribe'][language],
