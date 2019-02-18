@@ -81,7 +81,7 @@ const sendDefaultReply = async (chat) => {
     }
 
     if (sendReply) {
-        return handler.payloads['defaultReply'](chat, 'defaultReply')
+        return handler.payloads['defaultReply'](chat)
     } else {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Ongoing', chat.language).send();

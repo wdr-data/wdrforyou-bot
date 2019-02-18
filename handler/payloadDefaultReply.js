@@ -3,7 +3,7 @@ import translations from "../assets/translations";
 import {getFaq} from "../handler/payloadFAQ";
 
 
-export default async function(chat, handle) {
+export default async function(chat) {
     const defaultReply = await getFaq(chat, 'defaultReply');
 
     const buttons = [
