@@ -127,7 +127,7 @@ const getNewLabel = async function(lang) {
         currentBatch = 1;
     }
 
-    if (subscriberCount < process.env.BROADCAST_BATCH_SIZE || 4000) {
+    if (subscriberCount < (process.env.BROADCAST_BATCH_SIZE || 4000)) {
         await labels.inc(lang, 'subscribers', 'language');
         return `${lang}-${currentBatch}`;
     } else {
