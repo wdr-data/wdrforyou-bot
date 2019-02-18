@@ -162,10 +162,10 @@ export default {
         german: "Los geht's",
     },
     defaultReplyTrigger: {
-        arabic: "Sent message",
-        persian: "Sent message",
-        english: "Sent message",
-        german: "Nachricht gesendet",
+        arabic: 'لقد تم إرسال رسالتك لـ "ف.د.ر. فوريو" ',
+        persian: "پیامتان به و د ار فور یو ارسال شد",
+        english: "Your message has been forwarded to WDRforyou",
+        german: "Nachricht an WDRforyou weitergeleitet.",
     },
     settings: {
         arabic: "⚙️ Settings",
