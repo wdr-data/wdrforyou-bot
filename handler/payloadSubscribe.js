@@ -10,13 +10,6 @@ const LanguageEnum = {
     GERMAN: 'german',
   };
 
-const getHasLabel = async function(chat) {
-    const labels = await chat.getLabels();
-    return function(labelName) {
-        return labels.indexOf(labelName) !== -1;
-    };
-};
-
 const enableSubscription = async function(psid, item) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
     try {
@@ -108,19 +101,18 @@ export const subscriptionList = async function(chat) {
     );
 };
 
-const removeLabels = async function(chat) {
-    const currentLabels = await chat.getLabels();
-    const availableLanguages = Object.values(LanguageEnum);
-
-    for (const label of currentLabels) {
-        if (availableLanguages.includes(label)) {
-            await chat.removeLabel(label);
+const removeLabel = async function(chat) {
+    try {
+        if (chat.subscribed) {
+            await chat.removeLabel(chat.language);
         }
+    } catch (e) {
+        console.error('Tried to remove label for user without label');
     }
 };
 
 export const subscribe = async function(chat, payload) {
-    await removeLabels(chat);
+    await removeLabel(chat);
 
     await chat.addLabel(payload.subscription);
     await enableSubscription(chat.event.sender.id, { language: payload.subscription });
@@ -153,7 +145,7 @@ export const subscribe = async function(chat, payload) {
 export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
 
-    await removeLabels(chat);
+    await removeLabel(chat);
 
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Unsubscribe', chat.language).send();
