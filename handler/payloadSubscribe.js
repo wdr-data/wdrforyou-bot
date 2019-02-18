@@ -102,9 +102,12 @@ export const subscriptionList = async function(chat) {
 };
 
 const removeLabel = async function(chat) {
-    const currentLabel = await chat.language;
-    if (currentLabel) {
-        await chat.removeLabel(currentLabel);
+    try {
+        if (chat.subscribed) {
+            await chat.removeLabel(chat.language);
+        }
+    } catch (e) {
+        console.error('Tried to remove label for user without label');
     }
 };
 
