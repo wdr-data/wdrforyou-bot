@@ -37,7 +37,7 @@ const makeMenuLanguage = (locale, language) => {
                         payload: JSON.stringify({ action: 'latest_reports' }),
                     },
                     {
-                        title: translations['defaultSpeakToYesButton'][language],
+                        title: translations['writeMessage'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'defaultReply' }),
                     },
@@ -64,6 +64,11 @@ const makeMenuLanguage = (locale, language) => {
                 call_to_actions: [
                     {
                         title: translations['changeLanguage'][language],
+                        type: 'postback',
+                        payload: JSON.stringify({ action: 'subscriptions' }),
+                    },
+                    {
+                        title: translations['subscribe'][language],
                         type: 'postback',
                         payload: JSON.stringify({ action: 'subscriptions' }),
                     },

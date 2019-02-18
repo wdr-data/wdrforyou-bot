@@ -42,10 +42,10 @@ export default {
         german: "Sprache ändern",
     },
     about: {
-        arabic: "من المزيد من المعلومات",
-        persian: "اطلاعات بیشتر",
-        english: "More Info",
-        german: "Mehr Infos",
+        arabic: "📝 من المزيد من المعلومات",
+        persian: "📝 اطلاعات بیشتر",
+        english: "📝 More Info",
+        german: "📝 Mehr Infos",
     },
     latestReports: {
         arabic: "منآخر الأخبار",
@@ -168,9 +168,21 @@ export default {
         german: "Nachricht an WDRforyou weitergeleitet.",
     },
     settings: {
-        arabic: "⚙️ Settings",
-        persian: "⚙️ Settings",
+        arabic: "⚙️ الإعدادات",
+        persian: "تنظیمات ⚙️",
         english: "⚙️ Settings",
         german: "⚙️ Einstellungen",
     },
+    subscribe: {
+        arabic: "اشتراك",
+        persian: "ورود",
+        english: "Subscribe",
+        german: "Anmelden"
+    },
+    writeMessage: {
+        arabic: "إرسال رسالة",
+        persian: "نوشتن پیام",
+        english: "Write Message",
+        german: "Nachricht schreiben"
+    }
 }
