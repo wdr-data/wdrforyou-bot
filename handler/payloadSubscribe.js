@@ -118,13 +118,11 @@ const getNewLabel = async function(lang) {
     let subscriberCount, currentBatch;
 
     try {
-        const label = labels.load(lang, 'language');
-        console.log(label);
+        const label = await labels.load(lang, 'language');
         subscriberCount = label.subscribers;
         currentBatch = label.batch;
     } catch (e) {
         await labels.create(lang, {subscribers: 0, batch: 1}, 'language');
-        console.log('Created new label entry');
         subscriberCount = 0;
         currentBatch = 1;
     }
