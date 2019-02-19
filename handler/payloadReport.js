@@ -1,4 +1,5 @@
 import request from 'request-promise-native';
+import moment from 'moment-timezone';
 import urls from '../lib/urls';
 import { buttonPostback, buttonUrl, guessAttachmentType } from '../lib/facebook';
 import translations from "../assets/translations";
@@ -41,17 +42,22 @@ const makeMoreButton = function(report, language) {
     );
 };
 
-const sendReport = async function(chat, report) {
-    const languages = [];
-
+export const translateReport = function(chat, report) {
     for (const translation of report.translations) {
         if (chat.language === translation.language) {
-            languages.push(translation.text);
+            return translation;
         }
     }
+}
+
+const sendReport = async function(chat, report) {
+    const languages = [];
+    const reportDate = moment(report.created).tz('Europe/Berlin').format('DD.MM.YYYY')
+
+    languages.push(translateReport(chat, report).text);
 
     languages.push(report.text);
-    const message = '+++NEWS+++\n' + languages.join('\n\n');
+    const message = `📅 ${reportDate}\n\n${languages.join('\n\n')}`;
 
     let linkButton;
     const moreButton = makeMoreButton(report, chat.language);

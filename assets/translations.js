@@ -184,5 +184,17 @@ export default {
         persian: "نوشتن پیام",
         english: "Write Message",
         german: "Nachricht schreiben"
-    }
+    },
+    readReport: {
+        arabic: "📰 Lesen",
+        persian: "📰 Lesen",
+        english: "📰 More Info",
+        german: "📰 Lesen",
+    },
+    noReportFound: {
+        arabic: "No report found",
+        persian: "No report found",
+        english: "No report found",
+        german: "Es gibt noch keine Meldungen",
+    },
 }
