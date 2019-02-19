@@ -68,6 +68,7 @@ export const fetch = async (event) => {
     }
 
     return {
+        state: 'nextBatch',
         report,
         batches,
         translations,
