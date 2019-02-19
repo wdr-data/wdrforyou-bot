@@ -15,6 +15,7 @@
     "serverless": "^1.32.0",
     "serverless-plugin-scripts": "^1.0.2",
     "serverless-pseudo-parameters": "^2.2.0",
+    "serverless-step-functions": "^1.13.0",
     "serverless-webpack": "^5.2.0",
     "webpack": "^4.20.2"
   },
