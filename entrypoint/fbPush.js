@@ -11,7 +11,7 @@ import {markSent} from "./cms";
 export const proxy = (event) => {
     const params = {
         stateMachineArn: process.env.statemachine_arn,
-        input: event,
+        input: typeof event === 'string' ? event : JSON.stringify(event),
     };
 
     const stepfunctions = new aws.StepFunctions();
