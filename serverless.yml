@@ -37,6 +37,10 @@ provider:
       Action:
         - cloudwatch:PutMetricData
       Resource: "*"
+    - Effect: Allow
+      Action:
+        - states:StartExecution
+      Resource: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:${self:service}-${self:provider.stage}-*"
 
 functions:
   hello:
