@@ -68,7 +68,7 @@ export const sendReport = async (event, context) => {
     }
 };
 
-const markSent = async (id) => {
+export const markSent = async (id) => {
     try {
         const response = await request.patch({
             uri: urls.report(id),
