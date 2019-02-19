@@ -8,7 +8,7 @@ import {makeMoreButton} from "../handler/payloadReport";
 import {markSent} from "./cms";
 
 
-export const proxy = (event) => {
+export const proxy = (event, context, callback) => {
     const params = {
         stateMachineArn: process.env.statemachine_arn,
         input: typeof event === 'string' ? event : JSON.stringify(event),
@@ -19,8 +19,16 @@ export const proxy = (event) => {
         if (err) {
             console.error('err while executing step function');
             console.error(JSON.stringify(err, null, 2));
+            callback({
+                statusCode: 500,
+                body: JSON.stringify(err, null, 2),
+            });
         } else {
             console.log('started execution of step function');
+            callback({
+                statusCode: 200,
+                body: 'OK',
+            });
         }
     });
 };
