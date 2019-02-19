@@ -52,7 +52,7 @@ export const fetch = async (event) => {
     const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
     for (const translation of translationList) {
-        const language = translation.language;
+        const language = translation.language || 'german';
 
         // Map the translation to the language
         translations[language] = translation;
