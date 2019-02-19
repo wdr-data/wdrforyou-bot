@@ -8,29 +8,28 @@ import {makeMoreButton} from "../handler/payloadReport";
 import {markSent} from "./cms";
 
 
-export const proxy = (event, context, callback) => {
+export const proxy = async (event) => {
     const params = {
         stateMachineArn: process.env.statemachine_arn,
         input: typeof event === 'string' ? event : JSON.stringify(event),
     };
 
     const stepfunctions = new aws.StepFunctions();
-    stepfunctions.startExecution(params, function(err, data) {
-        if (err) {
-            console.error('err while executing step function');
-            console.error(JSON.stringify(err, null, 2));
-            callback({
-                statusCode: 500,
-                body: JSON.stringify(err, null, 2),
-            });
-        } else {
-            console.log('started execution of step function');
-            callback({
-                statusCode: 200,
-                body: 'OK',
-            });
-        }
-    });
+    try {
+        await stepfunctions.startExecution(params);
+        console.log('started execution of step function');
+        return {
+            statusCode: 200,
+            body: 'OK',
+        };
+    } catch (e) {
+        console.error('err while executing step function');
+        console.error(JSON.stringify(e, null, 2));
+        return {
+            statusCode: 500,
+            body: JSON.stringify(e, null, 2),
+        };
+    }
 };
 
 export const fetch = async (event) => {
