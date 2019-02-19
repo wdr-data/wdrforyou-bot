@@ -85,6 +85,7 @@ functions:
     timeout: 30
   fbPushFinish:
     handler: entrypoint/fbPush.finish
+    timeout: 30
   fbPushProxy:
     handler: entrypoint/fbPush.proxy
     environment:
