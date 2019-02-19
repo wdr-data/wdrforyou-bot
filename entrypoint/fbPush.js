@@ -16,7 +16,7 @@ export const proxy = async (event) => {
 
     const stepfunctions = new aws.StepFunctions();
     try {
-        await stepfunctions.startExecution(params);
+        await stepfunctions.startExecution(params).promise();
         console.log('started execution of step function');
         return {
             statusCode: 200,
