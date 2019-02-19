@@ -1,5 +1,6 @@
 import request from 'request-promise-native';
 import * as aws from 'aws-sdk';
+import ua from 'universal-analytics'
 
 import {buttonUrl, sendBroadcastButtons, sendBroadcastText} from '../lib/facebook';
 import DynamoDbCrud from '../lib/dynamodbCrud';
@@ -79,11 +80,12 @@ export const fetch = async (event) => {
         report,
         batches,
         translations,
+        results: [],
     };
 };
 
 export const send = async (event) => {
-    const {report, batches, translations} = event;
+    const {report, batches, translations, results} = event;
 
     const batchInfo = batches.shift();  // Remove and get first batch info
 
@@ -115,23 +117,50 @@ export const send = async (event) => {
         text = `${prefix}${translation.text}\n\n${report.text}`;
     }
 
+    let result;
+
     if (!buttons.length) {
         console.log('Sending broadcast without buttons');
-        await sendBroadcastText(text, null, label);
+        result = await sendBroadcastText(text, null, label);
     } else {
         console.log('Sending broadcast with buttons');
-        await sendBroadcastButtons(text, buttons, null, label);
+        result = await sendBroadcastButtons(text, buttons, null, label);
     }
+
+    results.push({
+        language,
+        broadcastId: result.broadcast_id,
+    });
 
     return {
         state: batches.length > 0 ? 'nextBatch' : 'finished',
         report,
         batches,
         translations,
+        results,
     }
 };
+
+
+const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const finish = async (event) => {
     console.log('Sending of push finished:', event);
     await markSent(event.report.id);
+
+    await snooze(10000);
+    const tracker = ua(process.env.UA_TRACKING_ID, 'broadcaster', {strictCidFormat: false});
+
+    for (const result of event.results) {
+        const stats = await request.get({
+            uri: `https://graph.facebook.com/v3.2/${result.broadcastId}/insights/messages_sent`,
+            qs: {
+                access_token: process.env.FB_PAGETOKEN,
+            },
+            json: true,
+        });
+        const amount = stats.data[0].values[0].value;
+
+        await tracker.event('Broadcast', event.report.headline, result.language, amount).send();
+    }
 };
