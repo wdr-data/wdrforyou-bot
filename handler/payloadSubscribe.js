@@ -139,7 +139,7 @@ const getNewLabel = async function(lang) {
 
 export const subscribe = async function(chat, payload) {
     await removeLabel(chat);
-    const label = await getNewLabel(chat.language);
+    const label = await getNewLabel(payload.subscription);
 
     await chat.addLabel(label);
     await enableSubscription(chat.event.sender.id, { language: payload.subscription, label });
