@@ -59,5 +59,5 @@ export default async function(chat) {
         }
 
     }
-    return chat.sendList(elements.slice(0, 4));
+    return chat.sendList(elements);
 }
