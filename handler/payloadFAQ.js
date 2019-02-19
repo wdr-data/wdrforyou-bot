@@ -33,7 +33,7 @@ export const sendFaq = async function(chat, handle) {
             await chat.track.event('Conversation', 'Declined', chat.language).send();
         }
         else {
-            await chat.track.event('Interaction', handle, chat.language).send();
+            await chat.track.event('Menu', handle, chat.language).send();
         }
     }
 

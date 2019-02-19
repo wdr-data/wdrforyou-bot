@@ -81,12 +81,14 @@ const sendDefaultReply = async (chat) => {
     }
 
     if (sendReply) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+        }
         return handler.payloads['defaultReply'](chat)
     } else {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Ongoing', chat.language).send();
         }
-
         return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger))
     }
 };
@@ -133,6 +135,9 @@ const handleMessage = async (event, context, chat) => {
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'video'
     ) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'QuestionForContact-audio/video', chat.language).send();
+        }
         return sendDefaultReply(chat);
     }
 };
