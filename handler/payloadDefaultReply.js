@@ -3,7 +3,15 @@ import translations from "../assets/translations";
 import {getFaq} from "../handler/payloadFAQ";
 
 
-export default async function(chat) {
+export const contact = async function(chat) {
+    if (chat.trackingEnabled) {
+        await chat.track.event('Menu', 'QuestionForContact', chat.language).send();
+    }
+    return defaultReply(chat);
+};
+
+
+export const defaultReply = async function(chat) {
     const defaultReply = await getFaq(chat, 'defaultReply');
 
     const buttons = [
@@ -22,9 +30,6 @@ export default async function(chat) {
             chat.getTranslation(translations.defaultNotSubscribedButton),
             {action: 'subscriptions'},
         ))
-    }
-    if (chat.trackingEnabled) {
-        await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
     }
     return chat.sendFragmentsWithButtons(defaultReply.fragments, buttons);
 }
