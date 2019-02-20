@@ -42,7 +42,7 @@ const makeMoreButton = function(report, language) {
     );
 };
 
-export const translateReport = function(chat, report) {
+export const translateReport = function(report, chat) {
     for (const translation of report.translations) {
         if (chat.language === translation.language) {
             return translation;
@@ -52,9 +52,9 @@ export const translateReport = function(chat, report) {
 
 const sendReport = async function(chat, report) {
     const languages = [];
-    const reportDate = moment(report.created).tz('Europe/Berlin').format('DD.MM.YYYY')
+    const reportDate = moment(report.created).tz('Europe/Berlin').format('DD.MM.YYYY');
 
-    languages.push(translateReport(chat, report).text);
+    languages.push(translateReport(report, chat).text);
 
     languages.push(report.text);
     const message = `📅 ${reportDate}\n\n${languages.join('\n\n')}`;
