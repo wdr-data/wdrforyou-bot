@@ -9,6 +9,7 @@ import DynamoDbCrud from '../lib/dynamodbCrud';
 import urls from "../lib/urls";
 import {makeMoreButton} from "../handler/payloadReport";
 import {markSent} from "./cms";
+import translations from '../assets/translations';
 
 
 export const proxy = RavenLambdaWrapper.handler(Raven, async (event) => {
@@ -49,7 +50,7 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
     const translationList = [report, ...report.translations];
 
     const batches = [];  // List of all batches for all languages
-    const translations = {};  // Mapping of language to translation
+    const translationMap = {};  // Mapping of language to translation
 
     const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
@@ -57,7 +58,7 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
         const language = translation.language || 'german';
 
         // Map the translation to the language
-        translations[language] = translation;
+        translationMap[language] = translation;
 
         // Make a list of all batches that should be sent
         const label = await labels.load(language, 'language');
@@ -73,19 +74,19 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
         state: 'nextBatch',
         report,
         batches,
-        translations,
+        translationMap,
         results: [],
     };
 });
 
 export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
-    const {report, batches, translations, results} = event;
+    const {report, batches, translationMap, results} = event;
 
     const batchInfo = batches.shift();  // Remove and get first batch info
 
     const {batch, language} = batchInfo;
 
-    const translation = translations[language];
+    const translation = translationMap[language];
     const label = batch === 0 ? language : `${language}-${batch}`;
 
     console.log(`Sending report ${JSON.stringify(report, null, 2)} to label ${label}`);
@@ -106,9 +107,9 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
     let text;
 
     if (!translation.language) {
-        text = prefix + translation.text;
+        text = `${prefix}${translation.text}\n\nm.me/WDRforyou`;
     } else {
-        text = `${prefix}${translation.text}\n\n${report.text}`;
+        text = `${prefix}${translation.text}\n\n${report.text}\n\nm.me/WDRforyou`;
     }
 
     let result;
@@ -130,7 +131,7 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
         state: batches.length > 0 ? 'nextBatch' : 'finished',
         report,
         batches,
-        translations,
+        translationMap,
         results,
     }
 });
