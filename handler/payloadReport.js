@@ -48,13 +48,15 @@ export const translateReport = function(report, chat) {
             return translation;
         }
     }
-}
+};
 
 const sendReport = async function(chat, report) {
     const languages = [];
     const reportDate = moment(report.created).tz('Europe/Berlin').format('DD.MM.YYYY');
 
-    languages.push(translateReport(report, chat).text);
+    if (chat.language !== 'german') {
+        languages.push(translateReport(report, chat).text);
+    }
 
     languages.push(report.text);
     const message = `📅 ${reportDate}\n\n${languages.join('\n\n')}`;
