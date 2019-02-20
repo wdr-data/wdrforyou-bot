@@ -1,20 +1,5 @@
 'use strict';
 
-module.exports.hello = async (event, context) => {
-
-    try {
-        await (async () => {
-            throw new Error("AHHHHH");
-        })()
-    } catch (e) {
-        console.error('Arbritary schit', e);
-    }
-
-    return {
-        statusCode: 200,
-        body: JSON.stringify({
-            message: `Go Serverless v1.0! Your function executed successfully! ${process.env['TEST']}`,
-            input: event,
-        }),
-    };
-};
+module.exports.hello = RavenLambdaWrapper.handler(Raven, async (event, context) => {
+    throw new Error("AHHHHH");
+});

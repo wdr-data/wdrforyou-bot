@@ -1,11 +1,14 @@
 import request from 'request-promise-native';
+const Raven = require("raven");
+const RavenLambdaWrapper = require("serverless-sentry-lib");
+
 import { sendBroadcastText, sendBroadcastButtons, buttonUrl } from "../lib/facebook";
 import urls from "../lib/urls";
 import { makeMoreButton } from "../handler/payloadReport";
 import translations from "../assets/translations";
 
 
-export const sendReport = async (event, context) => {
+export const sendReport = RavenLambdaWrapper.handler(Raven, async (event, context) => {
     try {
         const payload = JSON.parse(event.body);
 
@@ -66,7 +69,7 @@ export const sendReport = async (event, context) => {
             body: JSON.stringify(e, null, 2),
         };
     }
-};
+});
 
 export const markSent = async (id) => {
     try {

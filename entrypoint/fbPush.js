@@ -1,6 +1,8 @@
 import request from 'request-promise-native';
 import * as aws from 'aws-sdk';
 import ua from 'universal-analytics'
+const Raven = require("raven");
+const RavenLambdaWrapper = require("serverless-sentry-lib");
 
 import {buttonUrl, sendBroadcastButtons, sendBroadcastText} from '../lib/facebook';
 import DynamoDbCrud from '../lib/dynamodbCrud';
@@ -9,31 +11,23 @@ import {makeMoreButton} from "../handler/payloadReport";
 import {markSent} from "./cms";
 
 
-export const proxy = async (event) => {
+export const proxy = RavenLambdaWrapper.handler(Raven, async (event) => {
     const params = {
         stateMachineArn: process.env.statemachine_arn,
         input: typeof event === 'string' ? event : JSON.stringify(event),
     };
 
     const stepfunctions = new aws.StepFunctions();
-    try {
-        await stepfunctions.startExecution(params).promise();
-        console.log('started execution of step function');
-        return {
-            statusCode: 200,
-            body: 'OK',
-        };
-    } catch (e) {
-        console.error('err while executing step function');
-        console.error(JSON.stringify(e, null, 2));
-        return {
-            statusCode: 500,
-            body: JSON.stringify(e, null, 2),
-        };
-    }
-};
 
-export const fetch = async (event) => {
+    await stepfunctions.startExecution(params).promise();
+    console.log('started execution of step function');
+    return {
+        statusCode: 200,
+        body: 'OK',
+    };
+});
+
+export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log(JSON.stringify(event, null, 2));
 
     let reportID;
@@ -82,9 +76,9 @@ export const fetch = async (event) => {
         translations,
         results: [],
     };
-};
+});
 
-export const send = async (event) => {
+export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
     const {report, batches, translations, results} = event;
 
     const batchInfo = batches.shift();  // Remove and get first batch info
@@ -139,12 +133,12 @@ export const send = async (event) => {
         translations,
         results,
     }
-};
+});
 
 
 const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-export const finish = async (event) => {
+export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log('Sending of push finished:', event);
     await markSent(event.report.id);
 
@@ -163,4 +157,4 @@ export const finish = async (event) => {
 
         await tracker.event('Broadcast', event.report.headline, result.language, amount).send();
     }
-};
+});
