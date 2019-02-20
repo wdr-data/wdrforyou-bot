@@ -37,6 +37,10 @@ provider:
       Action:
         - cloudwatch:PutMetricData
       Resource: "*"
+    - Effect: Allow
+      Action:
+        - states:StartExecution
+      Resource: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:${self:service}-${self:provider.stage}-*"
 
 functions:
   hello:
@@ -69,43 +73,56 @@ functions:
   cmsSendReport:
     handler: entrypoint/cms.sendReport
     timeout: 25
+#    events:
+#      - http:
+#          path: sendReport
+#          method: post
+
+  fbPushFetch:
+    handler: entrypoint/fbPush.fetch
+  fbPushSend:
+    handler: entrypoint/fbPush.send
+    timeout: 30
+  fbPushFinish:
+    handler: entrypoint/fbPush.finish
+    timeout: 30
+  fbPushProxy:
+    handler: entrypoint/fbPush.proxy
+    environment:
+      statemachine_arn: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:${self:service}-${self:provider.stage}-batchedBroadcast"
     events:
       - http:
           path: sendReport
           method: post
 
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
-#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
-#      - iot:
-#          sql: "SELECT * FROM 'some_topic'"
-#      - cloudwatchEvent:
-#          event:
-#            source:
-#              - "aws.ec2"
-#            detail-type:
-#              - "EC2 Instance State-change Notification"
-#            detail:
-#              state:
-#                - pending
-#      - cloudwatchLog: '/aws/lambda/hello'
-#      - cognitoUserPool:
-#          pool: MyUserPool
-#          trigger: PreSignUp
-
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
+stepFunctions:
+  stateMachines:
+    batchedBroadcast:
+      name: ${self:service}-${self:provider.stage}-batchedBroadcast
+      definition:
+        StartAt: fetching
+        States:
+          fetching:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-fbPushFetch"
+            Next: loop
+          loop:
+            Type: Choice
+            Choices:
+              - Variable: "$.state"
+                StringEquals: "nextBatch"
+                Next: sending
+              - Variable: "$.state"
+                StringEquals: "finished"
+                Next: finished
+          sending:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-fbPushSend"
+            Next: loop
+          finished:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-fbPushFinish"
+            End: true
 
 custom:
   webpack:
@@ -121,6 +138,7 @@ custom:
 plugins:
   - serverless-plugin-scripts
   - serverless-pseudo-parameters
+  - serverless-step-functions
   - serverless-webpack
 
 # you can add CloudFormation resource templates here

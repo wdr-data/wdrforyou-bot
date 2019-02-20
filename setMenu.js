@@ -39,7 +39,7 @@ const makeMenuLanguage = (locale, language) => {
                     {
                         title: translations['writeMessage'][language],
                         type: 'postback',
-                        payload: JSON.stringify({ action: 'defaultReply' }),
+                        payload: JSON.stringify({ action: 'contact' }),
                     },
                     {
                         title: translations['aboutService'][language],

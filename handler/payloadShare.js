@@ -18,7 +18,7 @@ export default async function(chat) {
     ];
 
     if (chat.trackingEnabled) {
-        await chat.track.event('Interaction', 'Sharing', chat.language).send();
+        await chat.track.event('Menu', 'Sharing', chat.language).send();
     }
 
     return chat.sendButtons(text, [ buttonShare(sharedContent) ]);

@@ -54,9 +54,23 @@ const tableProps = {
                 AttributeType: 'S',
             },
         ],
-            KeySchema: [
+        KeySchema: [
             {
                 AttributeName: 'psid',
+                KeyType: 'HASH',
+            },
+        ],
+    },
+    'labels': {
+        AttributeDefinitions: [
+            {
+                AttributeName: 'language',
+                AttributeType: 'S',
+            },
+        ],
+        KeySchema: [
+            {
+                AttributeName: 'language',
                 KeyType: 'HASH',
             },
         ],

@@ -81,12 +81,14 @@ const sendDefaultReply = async (chat) => {
     }
 
     if (sendReply) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+        }
         return handler.payloads['defaultReply'](chat)
     } else {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Ongoing', chat.language).send();
         }
-
         return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger))
     }
 };
@@ -123,16 +125,22 @@ const handleMessage = async (event, context, chat) => {
     ) {
         if ('sticker_id' in msgEvent.message && msgEvent.message.sticker_id === 369239263222822) {
             if (chat.trackingEnabled) {
-                await chat.track.event('Interaction', 'Like-Button', chat.language).send();
+                await chat.track.event('Conversation', 'Like-Button', chat.language).send();
             }
             return chat.sendText(`👌`);
         } else {
+            if (chat.trackingEnabled) {
+                await chat.track.event('Conversation', 'Image', chat.language).send();
+            }
             return sendDefaultReply(chat);
         }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'video'
     ) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'Audio/Video', chat.language).send();
+        }
         return sendDefaultReply(chat);
     }
 };

@@ -19,6 +19,7 @@ const enableSubscription = async function(psid, item) {
         console.log('Creating user in dynamoDB failed: ', error);
         try {
             await libSubscriptions.update(psid, 'language', item.language);
+            await libSubscriptions.update(psid, 'label', item.label);
             console.log(`Enabled subscription ${item} in dynamoDB for ${psid}`);
         } catch (error) {
             console.log('Updating user in dynamoDB failed: ', error);
@@ -103,21 +104,48 @@ export const subscriptionList = async function(chat) {
 
 const removeLabel = async function(chat) {
     try {
-        if (chat.subscribed) {
-            await chat.removeLabel(chat.language);
+        if (chat.label) {
+            await chat.removeLabel(chat.label);
         }
     } catch (e) {
         console.error('Tried to remove label for user without label');
     }
 };
 
+const getNewLabel = async function(lang) {
+    const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
+
+    let subscriberCount, currentBatch;
+
+    try {
+        const label = await labels.load(lang, 'language');
+        subscriberCount = label.subscribers;
+        currentBatch = label.batch;
+    } catch (e) {
+        await labels.create(lang, {subscribers: 0, batch: 1}, 'language');
+        subscriberCount = 0;
+        currentBatch = 1;
+    }
+
+    if (subscriberCount < (process.env.BROADCAST_BATCH_SIZE || 4000)) {
+        await labels.inc(lang, 'subscribers', 'language');
+        return `${lang}-${currentBatch}`;
+    } else {
+        await labels.update(lang, 'subscribers', 1, 'language');
+        await labels.update(lang, 'batch', currentBatch + 1, 'language');
+        return `${lang}-${currentBatch + 1}`;
+    }
+};
+
 export const subscribe = async function(chat, payload) {
     await removeLabel(chat);
+    const label = await getNewLabel(payload.subscription);
 
-    await chat.addLabel(payload.subscription);
-    await enableSubscription(chat.event.sender.id, { language: payload.subscription });
+    await chat.addLabel(label);
+    await enableSubscription(chat.event.sender.id, { language: payload.subscription, label });
 
     chat.language = payload.subscription;
+    chat.label = label;
     const subscriptionReturn = await getFaq(chat, 'subscriptionReturn');
 
     const buttons = [
