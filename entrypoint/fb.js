@@ -1,12 +1,14 @@
-import {Chat, sendBroadcastButtons, guessAttachmentType, buttonPostback} from '../lib/facebook';
+const Raven = require("raven");
+const RavenLambdaWrapper = require("serverless-sentry-lib");
+
+import { Chat, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import translations from '../assets/translations';
-import {getFaq} from "../handler/payloadFAQ";
 
 
-export const verify = async (event, context) => {
+export const verify = RavenLambdaWrapper.handler(Raven, async (event, context) => {
     const params = event.queryStringParameters || {};
 
     const token = params['hub.verify_token'];
@@ -27,13 +29,13 @@ export const verify = async (event, context) => {
         statusCode: 400,
         body: 'Parameter missing',
     };
-};
+});
 
 export const message = async (event, context) => {
     try {
         await messageHandler(event, context);
     } catch (e) {
-        console.error('Error:', e);
+        Raven.captureException(e);
     }
 
     return {
@@ -102,13 +104,7 @@ const handleMessage = async (event, context, chat) => {
     }
 
     if ('message' in msgEvent && 'quick_reply' in msgEvent.message) {
-        try {
-            replyPayload = JSON.parse(msgEvent.message.quick_reply.payload);
-        } catch (e) {
-            console.error('Parsing of quick reply payload failed:',
-                msgEvent.message.quick_reply.payload);
-            replyPayload = null;
-        }
+        replyPayload = JSON.parse(msgEvent.message.quick_reply.payload);
     }
 
     if (replyPayload) {
@@ -145,20 +141,13 @@ const handleMessage = async (event, context, chat) => {
     }
 };
 
-export const attachment = async (event, context) => {
+export const attachment = RavenLambdaWrapper.handler(Raven, async (event, context) => {
     const payload = JSON.parse(event.body);
     const url = payload.url;
 
-    try {
-        const id = await getAttachmentId(url, guessAttachmentType(url));
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true, message: id }),
-        };
-    } catch (e) {
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ success: false, message: e.message }),
-        };
-    }
-};
+    const id = await getAttachmentId(url, guessAttachmentType(url));
+    return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true, message: id }),
+    };
+});

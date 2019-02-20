@@ -131,15 +131,15 @@ custom:
         - source-map-support
       forceExclude:
         - aws-sdk
-#    packagerOptions:
-#      scripts:
-#        - npm rebuild grpc --target=6.1.0 --target_arch=x64 --target_platform=linux --target_libc=glibc
+  sentry:
+    dsn: ${file(config/env.js):env.SENTRY_DSN}
 
 plugins:
   - serverless-plugin-scripts
   - serverless-pseudo-parameters
   - serverless-step-functions
   - serverless-webpack
+  - serverless-sentry
 
 # you can add CloudFormation resource templates here
 #resources:
