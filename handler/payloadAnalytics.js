@@ -1,7 +1,10 @@
-import {getFaq} from "./payloadFAQ";
-import DynamoDbCrud from "../lib/dynamodbCrud";
-import translations from "../assets/translations";
 import {buttonPostback} from "../lib/facebook";
+import DynamoDbCrud from "../lib/dynamodbCrud";
+
+import translations from "../assets/translations";
+import videos from "../assets/videos";
+
+import {getFaq} from "./payloadFAQ";
 
 export async function accept(chat) {
     const tracking = new DynamoDbCrud(process.env.DYNAMODB_TRACKING);
@@ -18,7 +21,8 @@ export async function accept(chat) {
 
     await chat.track.event('Analytics', 'Allowed', chat.language).send();
 
-    return chat.sendFragments(thanksAnalytics.fragments);
+    await chat.sendFragments(thanksAnalytics.fragments);
+    return chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
 }
 
 export async function decline(chat) {
@@ -35,7 +39,8 @@ export async function decline(chat) {
     }
 
     const noAnalytics = await getFaq(chat, 'noAnalytics');
-    return chat.sendFragments(noAnalytics.fragments);
+    await chat.sendFragments(noAnalytics.fragments);
+    return chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
 }
 
 export async function choose(chat) {
