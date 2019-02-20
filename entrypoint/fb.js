@@ -31,8 +31,12 @@ export const verify = RavenLambdaWrapper.handler(Raven, async (event, context) =
     };
 });
 
-export const message = RavenLambdaWrapper.handler(Raven, async (event, context) => {
-    await messageHandler(event, context);
+export const message = async (event, context) => {
+    try {
+        await messageHandler(event, context);
+    } catch (e) {
+        Raven.captureException(e);
+    }
 
     return {
         statusCode: 200,
@@ -41,7 +45,7 @@ export const message = RavenLambdaWrapper.handler(Raven, async (event, context) 
             input: event,
         }),
     };
-});
+};
 
 const messageHandler = async (event, context) => {
     let chat = null;
