@@ -106,9 +106,9 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
     let text;
 
     if (!translation.language) {
-        text = prefix + translation.text;
+        text = `${prefix}{translation.text}\n\nm.me/WDRforyou`;
     } else {
-        text = `${prefix}${translation.text}\n\n${report.text}`;
+        text = `${prefix}${translation.text}\n\n${report.text}\n\nm.me/WDRforyou`;
     }
 
     let result;

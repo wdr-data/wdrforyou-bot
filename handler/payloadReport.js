@@ -59,7 +59,7 @@ const sendReport = async function(chat, report) {
     }
 
     languages.push(report.text);
-    const message = `📅 ${reportDate}\n\n${languages.join('\n\n')}`;
+    const message = `📅 ${reportDate}\n\n${languages.join('\n\n')}\n\nm.me/WDRforyou`;
 
     let linkButton;
     const moreButton = makeMoreButton(report, chat.language);
