@@ -4,8 +4,8 @@ import {buttonPostback} from "../lib/facebook";
 
 export const handler = async (chat) => {
     const button = buttonPostback(
-        chat.getTranslation(translations.subscribe),
-        { action: 'subscribe' },
+        `👉 ${chat.getTranslation(translations.subscribe)} 👈`,
+        { action: 'subscriptions' },
     );
 
     await chat.sendMediaTemplate(chat.getTranslation(videos.getStarted), [button]);
