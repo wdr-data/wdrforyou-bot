@@ -79,7 +79,12 @@ const sendDefaultReply = async (chat) => {
         const lastReply = await lastDefaultReplies.load(chat.psid);
         sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
     } catch {
-        sendReply = true;
+        const subscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS)
+        if (await subscriptions.load(chat.psid)) {
+            sendReply = true;
+        } else {
+            sendReply = false;
+        }
     }
 
     if (sendReply) {
