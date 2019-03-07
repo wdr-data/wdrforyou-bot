@@ -116,6 +116,11 @@ const handleMessage = async (event, context, chat) => {
     }
 
     if ('text' in msgEvent.message) {
+        switch (msgEvent.message.text) {
+            case '#psid':
+                return chat.sendText(`${chat.psid}`);
+        }
+
         return sendDefaultReply(chat);
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
