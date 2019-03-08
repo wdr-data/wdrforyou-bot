@@ -90,9 +90,6 @@ export const subscriptionList = async function(chat) {
         );
     }
 
-    await chat.sendText(
-        Object.values(translations.subscriptionIntro).join('\n')
-    );
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Show options', chat.language).send();
     }
