@@ -21,8 +21,7 @@ export async function accept(chat) {
 
     await chat.track.event('Analytics', 'Allowed', chat.language).send();
 
-    await chat.sendFragments(thanksAnalytics.fragments);
-    return chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
+    return chat.sendFragments(thanksAnalytics.fragments);
 }
 
 export async function decline(chat) {
@@ -39,8 +38,7 @@ export async function decline(chat) {
     }
 
     const noAnalytics = await getFaq(chat, 'noAnalytics');
-    await chat.sendFragments(noAnalytics.fragments);
-    return chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
+    return chat.sendFragments(noAnalytics.fragments);
 }
 
 export async function choose(chat) {
