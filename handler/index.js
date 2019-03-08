@@ -16,5 +16,6 @@ export default {
         'analyticsChoose': require('./payloadAnalytics').choose,
         'defaultReply': require('./payloadDefaultReply').defaultReply,
         'contact': require('./payloadDefaultReply').contact,
+        'get_started': require('./payloadGetStarted').default,
     },
 };

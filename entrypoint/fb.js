@@ -120,7 +120,12 @@ const handleMessage = async (event, context, chat) => {
                 return chat.sendText(`${chat.psid}`);
         }
 
-        return sendDefaultReply(chat);
+        await sendDefaultReply(chat);
+        if ('attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'fallback') {
+            if (!chat.subscribed && chat.trackingEnabled === undefined) {
+                return handler.payloads['get_started'](chat);
+            }
+        }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
