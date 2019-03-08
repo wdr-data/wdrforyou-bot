@@ -2,6 +2,7 @@ import { buttonPostback, listElement } from '../lib/facebook';
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import translations from '../assets/translations';
 import { getFaq } from "./payloadFAQ";
+import videos from "../assets/videos";
 
 const LanguageEnum = {
     ARABIC: 'arabic',
@@ -89,9 +90,6 @@ export const subscriptionList = async function(chat) {
         );
     }
 
-    await chat.sendText(
-        Object.values(translations.subscriptionIntro).join('\n')
-    );
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Show options', chat.language).send();
     }
@@ -145,6 +143,7 @@ export const subscribe = async function(chat, payload) {
     await enableSubscription(chat.event.sender.id, { language: payload.subscription, label });
 
     chat.language = payload.subscription;
+    chat.subscribed = true;
     chat.label = label;
     const subscriptionReturn = await getFaq(chat, 'subscriptionReturn');
 
@@ -167,6 +166,7 @@ export const subscribe = async function(chat, payload) {
         await chat.track.event('Subscription', 'Subscribe', chat.language).send();
     }
 
+    await chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
     return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);
 };
 

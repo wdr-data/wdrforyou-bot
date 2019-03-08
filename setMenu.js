@@ -13,7 +13,7 @@ const FbLanguageEnum = {
 const availableFbLanguages = Object.keys(FbLanguageEnum);
 
 const GET_STARTED_PAYLOAD = {
-    action: 'subscriptions',
+    action: 'get_started',
 };
 
 const greetings = [];

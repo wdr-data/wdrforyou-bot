@@ -1,7 +1,10 @@
-import {getFaq} from "./payloadFAQ";
-import DynamoDbCrud from "../lib/dynamodbCrud";
-import translations from "../assets/translations";
 import {buttonPostback} from "../lib/facebook";
+import DynamoDbCrud from "../lib/dynamodbCrud";
+
+import translations from "../assets/translations";
+import videos from "../assets/videos";
+
+import {getFaq} from "./payloadFAQ";
 
 export async function accept(chat) {
     const tracking = new DynamoDbCrud(process.env.DYNAMODB_TRACKING);

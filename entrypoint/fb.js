@@ -79,7 +79,7 @@ const sendDefaultReply = async (chat) => {
         const lastReply = await lastDefaultReplies.load(chat.psid);
         sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
     } catch {
-        sendReply = true;
+        sendReply = chat.subscribed || chat.trackingEnabled !== undefined;
     }
 
     if (sendReply) {
@@ -115,7 +115,17 @@ const handleMessage = async (event, context, chat) => {
     }
 
     if ('text' in msgEvent.message) {
-        return sendDefaultReply(chat);
+        switch (msgEvent.message.text) {
+            case '#psid':
+                return chat.sendText(`${chat.psid}`);
+        }
+
+        await sendDefaultReply(chat);
+        if ('attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'fallback') {
+            if (!chat.subscribed && chat.trackingEnabled === undefined) {
+                return handler.payloads['get_started'](chat);
+            }
+        }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'image'
     ) {
