@@ -80,6 +80,7 @@ functions:
 
   fbPushFetch:
     handler: entrypoint/fbPush.fetch
+    timeout: 30
   fbPushSend:
     handler: entrypoint/fbPush.send
     timeout: 30
