@@ -8,7 +8,7 @@ import {buttonUrl, sendBroadcastButtons, sendBroadcastText} from '../lib/faceboo
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import urls from "../lib/urls";
 import {makeMoreButton} from "../handler/payloadReport";
-import {markSent} from "./cms";
+import {markSentReport, markSentTranslation} from "../lib/cms";
 import translations from '../assets/translations';
 
 
@@ -55,6 +55,10 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
     const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
     for (const translation of translationList) {
+
+        if (translation.delivered) {
+            continue;
+        }
         const language = translation.language || 'german';
 
         // Map the translation to the language
@@ -141,7 +145,10 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log('Sending of push finished:', event);
-    await markSent(event.report.id);
+    await markSentReport(event.report.id);
+    for (const t of Object.values(event.translationMap)) {
+        await markSentTranslation(t.id);
+    }
 
     await snooze(10000);
     const tracker = ua(process.env.UA_TRACKING_ID, 'broadcaster', {strictCidFormat: false});
