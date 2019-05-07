@@ -8,7 +8,7 @@ import {buttonUrl, sendBroadcastButtons, sendBroadcastText} from '../lib/faceboo
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import urls from "../lib/urls";
 import {makeMoreButton} from "../handler/payloadReport";
-import {markSentReport, markSentTranslation} from "./cms";
+import {markSentReport, markSentTranslation} from "../lib/cms";
 import translations from '../assets/translations';
 
 
