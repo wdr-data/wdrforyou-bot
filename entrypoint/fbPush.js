@@ -57,7 +57,7 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
     for (const translation of translationList) {
 
         if (translation.delivered) {
-            continue
+            continue;
         }
         const language = translation.language || 'german';
 
