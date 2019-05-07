@@ -55,6 +55,10 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
     const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
     for (const translation of translationList) {
+
+        if (translation.delivered) {
+            continue
+        }
         const language = translation.language || 'german';
 
         // Map the translation to the language
