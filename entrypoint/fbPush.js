@@ -146,8 +146,11 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log('Sending of push finished:', event);
     await markSentReport(event.report.id);
-    for (const t of Object.values(event.translationMap)) {
-        await markSentTranslation(t.id);
+    for (const key of event.translationMap) {
+        if (key === 'german') {
+            continue;
+        }
+        await markSentTranslation(event.translationMap[key].id);
     }
 
     await snooze(10000);
