@@ -11,7 +11,7 @@ export default async function(chat) {
     const qs = {limit: 4};
 
     if (chat.language !== 'german') {
-        qs[chat.language] = 1;
+        qs.language = chat.language;
     }
 
     const page = await request.get({
