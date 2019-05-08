@@ -27,31 +27,19 @@ export default async function(chat) {
     }
 
     const elements = [];
-    
+
     for (const report of page.results) {
         const reportDate = moment(report.created).tz('Europe/Berlin').format('DD.MM.YYYY');
 
-        if (chat.language === 'german'){
-            const element = listElement(
-                `${reportDate} - ${report.text}`,
-                null,
-                [ buttonPostback(
-                    chat.getTranslation(translations.readReport),
-                    { action: 'report', report: report.id }
-                )],
-            );
-            elements.push(element);
-        } else {
-            const element = listElement(
-                `${reportDate} - ${translateReport(report, chat).text}`,
-                report.text,
-                [ buttonPostback(
-                    chat.getTranslation(translations.readReport),
-                    { action: 'report', report: report.id }
-                )],
-            );
-            elements.push(element);
-        }
+        const element = listElement(
+            reportDate,
+            translateReport(report, chat).text,
+            [ buttonPostback(
+                chat.getTranslation(translations.readReport),
+                { action: 'report', report: report.id }
+            )],
+        );
+        elements.push(element);
     }
     return chat.sendList(elements);
 }
