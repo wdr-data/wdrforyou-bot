@@ -118,6 +118,9 @@ const handleMessage = async (event, context, chat) => {
         switch (msgEvent.message.text) {
             case '#psid':
                 return chat.sendText(`${chat.psid}`);
+            case '#resettimer':
+                const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
+                return lastDefaultReplies.remove(chat.psid);
         }
 
         await sendDefaultReply(chat);
