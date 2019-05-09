@@ -186,9 +186,9 @@ export default {
         german: "Nachricht schreiben"
     },
     readReport: {
-        arabic: "📰 Lesen",
-        persian: "📰 Lesen",
-        english: "📰 More Info",
+        arabic: "📰 قراءة المزيد",
+        persian: "📰 خواندن",
+        english: "📰 Read more",
         german: "📰 Lesen",
     },
     noReportFound: {
