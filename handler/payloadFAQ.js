@@ -46,9 +46,9 @@ export const handler = async (chat, payload) => {
     const handle = payload.handle;
 
     if (handle === 'defaultSpeakToYes') {
-        // Begin 36 hour
+        // Begin 72 hour
         const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
-        const ttl = Math.floor(Date.now() / 1000) + 36*60*60;
+        const ttl = Math.floor(Date.now() / 1000) + 72*60*60;
         try {
             await lastDefaultReplies.create(chat.psid, {ttl});
         } catch {

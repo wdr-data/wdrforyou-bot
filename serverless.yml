@@ -70,16 +70,9 @@ functions:
       - http:
           path: attachment
           method: post
-  cmsSendReport:
-    handler: entrypoint/cms.sendReport
-    timeout: 25
-#    events:
-#      - http:
-#          path: sendReport
-#          method: post
-
   fbPushFetch:
     handler: entrypoint/fbPush.fetch
+    timeout: 30
   fbPushSend:
     handler: entrypoint/fbPush.send
     timeout: 30

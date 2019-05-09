@@ -43,6 +43,10 @@ const makeMoreButton = function(report, language) {
 };
 
 export const translateReport = function(report, chat) {
+    if (chat.language === 'german') {
+        return report;
+    }
+
     for (const translation of report.translations) {
         if (chat.language === translation.language) {
             return translation;
