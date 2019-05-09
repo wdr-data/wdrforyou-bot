@@ -103,6 +103,9 @@ const sendDefaultReply = async (chat) => {
     }
 
     // translation for text < 30 characters
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', 'ShortMessage', chat.language).send();
+    }
     let translateResponse;
     try {
         translateResponse = (await translate.translateText({
@@ -126,8 +129,14 @@ const sendDefaultReply = async (chat) => {
     if (lexResponse.intentName === null) {
         switch (lexResponse.message) {
             case '#defaultReply':
+                if (chat.trackingEnabled) {
+                    await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+                }
                 return handler.payloads['defaultReply'](chat);
             case '#ongoingConversation':
+                if (chat.trackingEnabled) {
+                    await chat.track.event('Conversation', 'RepeatedlyIgnored', chat.language).send();
+                }
                 return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
         }
     }
@@ -144,6 +153,9 @@ const sendDefaultReply = async (chat) => {
             textReply = lexResponse.message;
     }
 
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', lexResponse.intentName, chat.language).send();
+    }
     return chat.sendText(textReply);
 
 };
