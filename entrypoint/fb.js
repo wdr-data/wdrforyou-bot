@@ -76,17 +76,36 @@ const messageHandler = async (event, context) => {
     }
 };
 
-const handleTextMessage = async (chat) => {
+const isConversationOngoing = async (chat) => {
     const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
-    let ongoingConversation;
 
     try {
         const lastReply = await lastDefaultReplies.load(chat.psid);
-        ongoingConversation = lastReply.ttl > Math.floor(Date.now() / 1000);
+        return lastReply.ttl > Math.floor(Date.now() / 1000);
     } catch {
         // (Most likely) Messenger Lite User
-        ongoingConversation = !chat.subscribed && chat.trackingEnabled === undefined;
+        return !chat.subscribed && chat.trackingEnabled === undefined;
     }
+}
+
+const handleMediaMessage = async (chat) => {
+    const ongoingConversation = await isConversationOngoing(chat);
+
+    if (ongoingConversation) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'Ongoing', chat.language).send();
+        }
+        return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
+    }
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+    }
+    return handler.payloads['defaultReply'](chat);
+}
+
+const handleTextMessage = async (chat) => {
+    const ongoingConversation = await isConversationOngoing(chat);
 
     if (ongoingConversation) {
         if (chat.trackingEnabled) {
@@ -216,7 +235,7 @@ const handleMessage = async (event, context, chat) => {
             if (chat.trackingEnabled) {
                 await chat.track.event('Conversation', 'Image', chat.language).send();
             }
-            return handleTextMessage(chat);
+            return handleMediaMessage(chat);
         }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
@@ -225,7 +244,7 @@ const handleMessage = async (event, context, chat) => {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Audio/Video', chat.language).send();
         }
-        return handleTextMessage(chat);
+        return handleMediaMessage(chat);
     }
 };
 
