@@ -9,6 +9,7 @@ import DynamoDbCrud from '../lib/dynamodbCrud';
 import urls from "../lib/urls";
 import {makeMoreButton} from "../handler/payloadReport";
 import {markSentReport, markSentTranslation} from "../lib/cms";
+import { snooze } from "../lib/util";
 import translations from '../assets/translations';
 
 
@@ -140,8 +141,6 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
     }
 });
 
-
-const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log('Sending of push finished:', event);
