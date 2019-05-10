@@ -76,7 +76,7 @@ const messageHandler = async (event, context) => {
     }
 };
 
-const sendDefaultReply = async (chat) => {
+const handleTextMessage = async (chat) => {
     const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
     let ongoingConversation;
 
@@ -198,7 +198,7 @@ const handleMessage = async (event, context, chat) => {
                 return lastDefaultReplies.remove(chat.psid);
         }
 
-        await sendDefaultReply(chat);
+        await handleTextMessage(chat);
         if ('attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'fallback') {
             if (!chat.subscribed && chat.trackingEnabled === undefined) {
                 return handler.payloads['get_started'](chat);
@@ -216,7 +216,7 @@ const handleMessage = async (event, context, chat) => {
             if (chat.trackingEnabled) {
                 await chat.track.event('Conversation', 'Image', chat.language).send();
             }
-            return sendDefaultReply(chat);
+            return handleTextMessage(chat);
         }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
@@ -225,7 +225,7 @@ const handleMessage = async (event, context, chat) => {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Audio/Video', chat.language).send();
         }
-        return sendDefaultReply(chat);
+        return handleTextMessage(chat);
     }
 };
 
