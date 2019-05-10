@@ -5,7 +5,11 @@ import { Chat, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
 import handler from '../handler';
 import DynamoDbCrud from '../lib/dynamodbCrud';
+import translate from '../lib/translate';
+import lex from '../lib/lex';
 import translations from '../assets/translations';
+import { unsubscribe } from '../handler/payloadSubscribe';
+import subscriptionHelp from '../handler/payloadSubscriptionHelp';
 
 
 export const verify = RavenLambdaWrapper.handler(Raven, async (event, context) => {
@@ -35,6 +39,7 @@ export const message = async (event, context) => {
     try {
         await messageHandler(event, context);
     } catch (e) {
+        console.error(e);
         Raven.captureException(e);
     }
 
@@ -71,28 +76,117 @@ const messageHandler = async (event, context) => {
     }
 };
 
-const sendDefaultReply = async (chat) => {
+const isConversationOngoing = async (chat) => {
     const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
-    let sendReply;
 
     try {
         const lastReply = await lastDefaultReplies.load(chat.psid);
-        sendReply = lastReply.ttl <= Math.floor(Date.now() / 1000);
+        return lastReply.ttl > Math.floor(Date.now() / 1000);
     } catch {
-        sendReply = chat.subscribed || chat.trackingEnabled !== undefined;
+        // (Most likely) Messenger Lite User
+        return !chat.subscribed && chat.trackingEnabled === undefined;
     }
+}
 
-    if (sendReply) {
-        if (chat.trackingEnabled) {
-            await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
-        }
-        return handler.payloads['defaultReply'](chat)
-    } else {
+const handleMediaMessage = async (chat) => {
+    const ongoingConversation = await isConversationOngoing(chat);
+
+    if (ongoingConversation) {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Ongoing', chat.language).send();
         }
-        return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger))
+        return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
     }
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+    }
+    return handler.payloads['defaultReply'](chat);
+}
+
+const handleTextMessage = async (chat) => {
+    const ongoingConversation = await isConversationOngoing(chat);
+
+    if (ongoingConversation) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'Ongoing', chat.language).send();
+        }
+        return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
+    }
+
+    const text = chat.event.message.text;
+
+    if (text.length > 30) {
+        if (chat.trackingEnabled) {
+            await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+        }
+        return handler.payloads['defaultReply'](chat);
+    }
+
+    // translation for text < 30 characters
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', 'ShortMessage', chat.language).send();
+    }
+    let translateResponse;
+    try {
+        translateResponse = (await translate.translateText({
+            "Text": text,
+            "SourceLanguageCode": "auto",
+            "TargetLanguageCode": "en"
+        }).promise()).TranslatedText;
+    } catch {
+        translateResponse = text;
+    }
+    // dialogflow
+    const lexParams = {
+        botAlias: process.env.LEX_BOT_ALIAS,
+        botName: process.env.LEX_BOT_NAME,
+        inputText: translateResponse,
+        userId: chat.hashedId,
+    };
+
+    const lexResponse = await lex.postText(lexParams).promise();
+    // reply to default
+    if (lexResponse.intentName === null) {
+        switch (lexResponse.message) {
+            case '#defaultReply':
+                if (chat.trackingEnabled) {
+                    await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+                }
+                return handler.payloads['defaultReply'](chat);
+            case '#ongoingConversation':
+                if (chat.trackingEnabled) {
+                    await chat.track.event('Conversation', 'RepeatedlyIgnored', chat.language).send();
+                }
+                return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
+        }
+    }
+
+    // React to intent
+    switch (lexResponse.intentName) {
+        case 'stop':
+            return unsubscribe(chat);
+        case 'help':
+            return subscriptionHelp(chat);
+    }
+
+    let textReply;
+    console.log(lexResponse);
+    switch (lexResponse.messageFormat) {
+        case 'Composite':
+            const groups = JSON.parse(lexResponse.message);
+            textReply = groups.messages[Math.floor(Math.random() * groups.messages.length)].value;
+            break;
+        case 'PlainText':
+        case 'CustomPayload':
+            textReply = lexResponse.message;
+    }
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Conversation', lexResponse.intentName, chat.language).send();
+    }
+    return chat.sendText(textReply);
+
 };
 
 const handleMessage = async (event, context, chat) => {
@@ -118,9 +212,12 @@ const handleMessage = async (event, context, chat) => {
         switch (msgEvent.message.text) {
             case '#psid':
                 return chat.sendText(`${chat.psid}`);
+            case '#resettimer':
+                const lastDefaultReplies = new DynamoDbCrud(process.env.DYNAMODB_LASTDEFAULTREPLIES);
+                return lastDefaultReplies.remove(chat.psid);
         }
 
-        await sendDefaultReply(chat);
+        await handleTextMessage(chat);
         if ('attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'fallback') {
             if (!chat.subscribed && chat.trackingEnabled === undefined) {
                 return handler.payloads['get_started'](chat);
@@ -138,7 +235,7 @@ const handleMessage = async (event, context, chat) => {
             if (chat.trackingEnabled) {
                 await chat.track.event('Conversation', 'Image', chat.language).send();
             }
-            return sendDefaultReply(chat);
+            return handleMediaMessage(chat);
         }
     } else if (
         'attachments' in msgEvent.message && msgEvent.message.attachments[0].type === 'audio' ||
@@ -147,7 +244,7 @@ const handleMessage = async (event, context, chat) => {
         if (chat.trackingEnabled) {
             await chat.track.event('Conversation', 'Audio/Video', chat.language).send();
         }
-        return sendDefaultReply(chat);
+        return handleMediaMessage(chat);
     }
 };
 

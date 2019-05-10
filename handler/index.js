@@ -17,5 +17,6 @@ export default {
         'defaultReply': require('./payloadDefaultReply').defaultReply,
         'contact': require('./payloadDefaultReply').contact,
         'get_started': require('./payloadGetStarted').default,
+        'subscriptionHelp': require('./payloadSubscriptionHelp').default,
     },
 };
