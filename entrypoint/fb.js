@@ -8,6 +8,8 @@ import DynamoDbCrud from '../lib/dynamodbCrud';
 import translate from '../lib/translate';
 import lex from '../lib/lex';
 import translations from '../assets/translations';
+import { unsubscribe } from '../handler/payloadSubscribe';
+import subscriptionHelp from '../handler/payloadSubscriptionHelp';
 
 
 export const verify = RavenLambdaWrapper.handler(Raven, async (event, context) => {
@@ -125,7 +127,7 @@ const sendDefaultReply = async (chat) => {
     };
 
     const lexResponse = await lex.postText(lexParams).promise();
-    // reply as lex suggests
+    // reply to default
     if (lexResponse.intentName === null) {
         switch (lexResponse.message) {
             case '#defaultReply':
@@ -139,6 +141,14 @@ const sendDefaultReply = async (chat) => {
                 }
                 return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
         }
+    }
+
+    // React to intent
+    switch (lexResponse.intentName) {
+        case 'stop':
+            return unsubscribe(chat);
+        case 'help':
+            return subscriptionHelp(chat);
     }
 
     let textReply;
