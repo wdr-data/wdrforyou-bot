@@ -146,6 +146,7 @@ const handleTextMessage = async (chat) => {
     };
 
     const lexResponse = await lex.postText(lexParams).promise();
+    console.log(lexResponse);
     // reply to default
     if (lexResponse.intentName === null) {
         switch (lexResponse.message) {
@@ -176,22 +177,26 @@ const handleTextMessage = async (chat) => {
             return subscriptionHelp(chat);
     }
 
-    let textReply;
-    console.log(lexResponse);
-    switch (lexResponse.messageFormat) {
-        case 'Composite':
-            const groups = JSON.parse(lexResponse.message);
-            textReply = groups.messages[Math.floor(Math.random() * groups.messages.length)].value;
-            break;
-        case 'PlainText':
-        case 'CustomPayload':
-            textReply = lexResponse.message;
-    }
-
     if (chat.trackingEnabled) {
         await chat.track.event('Conversation-ShortMessage', lexResponse.intentName, chat.language).send();
     }
-    return chat.sendText(textReply);
+
+    let textReply;
+    if (lexResponse.message === null) {
+        return;
+    } else {
+        switch (lexResponse.messageFormat) {
+            case 'Composite':
+                const groups = JSON.parse(lexResponse.message);
+                textReply = groups.messages[Math.floor(Math.random() * groups.messages.length)].value;
+                break;
+            case 'PlainText':
+            case 'CustomPayload':
+                textReply = lexResponse.message;
+        }
+        return chat.sendText(textReply);
+    }
+
 
 };
 
