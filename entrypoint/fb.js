@@ -1,5 +1,6 @@
 const Raven = require("raven");
 const RavenLambdaWrapper = require("serverless-sentry-lib");
+const emoji = require("node-emoji");
 
 import { Chat, guessAttachmentType } from '../lib/facebook';
 import { getAttachmentId } from '../lib/facebookAttachments';
@@ -137,11 +138,15 @@ const handleTextMessage = async (chat) => {
     } catch {
         translateResponse = text;
     }
+
+    const emojifreeTranslateResponse = emoji.unemojify(translateResponse).replace(/:/g, ' ');
+    console.log(emojifreeTranslateResponse);
+
     // dialogflow
     const lexParams = {
         botAlias: process.env.LEX_BOT_ALIAS,
         botName: process.env.LEX_BOT_NAME,
-        inputText: translateResponse,
+        inputText: emojifreeTranslateResponse,
         userId: chat.hashedId,
     };
 
