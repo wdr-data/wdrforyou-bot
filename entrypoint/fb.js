@@ -125,7 +125,7 @@ const handleTextMessage = async (chat) => {
 
     // translation for text < 30 characters
     if (chat.trackingEnabled) {
-        await chat.track.event('Conversation', 'ShortMessage', chat.language).send();
+        await chat.track.event('Conversation-ShortMessage', 'ShortMessage', chat.language).send();
     }
     let translateResponse;
     try {
@@ -151,12 +151,12 @@ const handleTextMessage = async (chat) => {
         switch (lexResponse.message) {
             case '#defaultReply':
                 if (chat.trackingEnabled) {
-                    await chat.track.event('Conversation', 'QuestionForContact', chat.language).send();
+                    await chat.track.event('Conversation-ShortMessage', 'QuestionForContact', chat.language).send();
                 }
                 return handler.payloads['defaultReply'](chat);
             case '#ongoingConversation':
                 if (chat.trackingEnabled) {
-                    await chat.track.event('Conversation', 'RepeatedlyIgnored', chat.language).send();
+                    await chat.track.event('Conversation-ShortMessage', 'RepeatedlyIgnored', chat.language).send();
                 }
                 return chat.sendText(chat.getTranslation(translations.defaultReplyTrigger));
         }
@@ -165,8 +165,14 @@ const handleTextMessage = async (chat) => {
     // React to intent
     switch (lexResponse.intentName) {
         case 'stop':
+            if (chat.trackingEnabled) {
+                await chat.track.event('Conversation-ShortMessage', 'Unsubscribe', chat.language).send();
+            }
             return unsubscribe(chat);
         case 'help':
+            if (chat.trackingEnabled) {
+                await chat.track.event('Conversation-ShortMessage', 'SubscriptionHelpVideo', chat.language).send();
+            }
             return subscriptionHelp(chat);
     }
 
@@ -183,7 +189,7 @@ const handleTextMessage = async (chat) => {
     }
 
     if (chat.trackingEnabled) {
-        await chat.track.event('Conversation', lexResponse.intentName, chat.language).send();
+        await chat.track.event('Conversation-ShortMessage', lexResponse.intentName, chat.language).send();
     }
     return chat.sendText(textReply);
 
