@@ -184,19 +184,19 @@ const handleTextMessage = async (chat) => {
     let textReply;
     if (lexResponse.message === null) {
         return;
-    } else {
-        switch (lexResponse.messageFormat) {
-            case 'Composite':
-                const groups = JSON.parse(lexResponse.message);
-                textReply = groups.messages[Math.floor(Math.random() * groups.messages.length)].value;
-                break;
-            case 'PlainText':
-            case 'CustomPayload':
-                textReply = lexResponse.message;
-        }
-        return chat.sendText(textReply);
     }
 
+    switch (lexResponse.messageFormat) {
+        case 'Composite':
+            const groups = JSON.parse(lexResponse.message);
+            textReply = groups.messages[Math.floor(Math.random() * groups.messages.length)].value;
+            break;
+        case 'PlainText':
+        case 'CustomPayload':
+            textReply = lexResponse.message;
+    }
+
+    return chat.sendText(textReply);
 
 };
 
