@@ -139,8 +139,12 @@ const handleTextMessage = async (chat) => {
         translateResponse = text;
     }
 
-    const emojifreeTranslateResponse = emoji.unemojify(translateResponse).replace(/:/g, ' ');
-    console.log(emojifreeTranslateResponse);
+    // handle emojies
+    let emojifreeTranslateResponse = emoji.strip(translateResponse);
+    if (emojifreeTranslateResponse.length === 0) {
+        emojifreeTranslateResponse = emoji.unemojify(translateResponse).replace(/:/g, ' ');
+    }
+    console.log('emoji free translation: ', emojifreeTranslateResponse);
 
     // dialogflow
     const lexParams = {
