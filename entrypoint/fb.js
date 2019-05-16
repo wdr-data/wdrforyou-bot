@@ -142,7 +142,7 @@ const handleTextMessage = async (chat) => {
     // handle emojies
     let emojifreeTranslateResponse = emoji.strip(translateResponse);
     if (emojifreeTranslateResponse.length === 0) {
-        emojifreeTranslateResponse = emoji.unemojify(translateResponse).replace(/:/g, ' ');
+        emojifreeTranslateResponse = emoji.unemojify(translateResponse).replace(/[_:]/g, ' ');
     }
     console.log('emoji free translation: ', emojifreeTranslateResponse);
 
