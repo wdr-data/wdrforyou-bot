@@ -27,6 +27,10 @@ const menuAbout = async function(chat) {
         )
     }
 
+    if (chat.trackingEnabled) {
+        await chat.track.event('Menu-Direct', 'About', chat.language).send();
+    }
+
     return chat.sendList(elements);
 }
 
@@ -52,6 +56,10 @@ const menuSettings = async function(chat) {
                 button
             )
         )
+    }
+
+    if (chat.trackingEnabled) {
+        await chat.track.event('Menu-Direct', 'Settings', chat.language).send();
     }
 
     return chat.sendList(elements);
