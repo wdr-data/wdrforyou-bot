@@ -36,7 +36,7 @@ export default async function(chat) {
             translateReport(report, chat).text,
             [ buttonPostback(
                 chat.getTranslation(translations.readReport),
-                { action: 'report', report: report.id }
+                { action: 'report', report: report.id, 'language': chat.language }
             )],
         );
         elements.push(element);

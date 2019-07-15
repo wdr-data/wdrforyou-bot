@@ -7,6 +7,10 @@ import translations from "../assets/translations";
 const handler = async function(chat, payload) {
     const url = `${urls.report(payload.report)}`;
 
+    if ('language' in payload) {
+        chat.language = payload.language;
+    }
+
     return sendReport(chat, await request({ uri: url, json: true }));
 };
 
