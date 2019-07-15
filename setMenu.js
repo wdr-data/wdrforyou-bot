@@ -29,55 +29,13 @@ const makeMenuLanguage = (locale, language) => {
             },
             {
                 title: translations['about'][language],
-                type: 'nested',
-                call_to_actions: [
-                    {
-                        title: translations['latestReports'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'latest_reports' }),
-                    },
-                    {
-                        title: translations['writeMessage'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'contact' }),
-                    },
-                    {
-                        title: translations['aboutService'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'faq', handle: 'aboutServiceFull' }),
-                    },
-                    {
-                        title: translations['companyDetails'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'faq', handle: 'companyDetailsFull' }),
-                    },
-                    {
-                        title: translations['subscriptionReturnDataPolicyButton'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'analyticsPolicy' }),
-                    }
-                ]
+                type: 'postback',
+                payload: JSON.stringify({ action: 'menuAbout' }),
             },
             {
                 title: translations['settings'][language],
-                type: 'nested',
-                call_to_actions: [
-                    {
-                        title: translations['changeLanguage'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'subscriptions' }),
-                    },
-                    {
-                        title: translations['subscribe'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'subscriptions' }),
-                    },
-                    {
-                        title: translations['unsubscribe'][language],
-                        type: 'postback',
-                        payload: JSON.stringify({ action: 'unsubscribe' }),
-                    },
-                ]
+                type: 'postback',
+                payload: JSON.stringify({ action: 'menuSettings' }),
             },
         ]
     };
