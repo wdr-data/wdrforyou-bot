@@ -84,16 +84,26 @@ export const subscriptionList = async function(chat) {
 
     let button;
     if (chat.subscribed) {
-        button = buttonPostback(
-            await chat.getTranslation(translations.unsubscribe),
-            { action: 'unsubscribe' },
-        );
-    } else {
-        button = buttonPostback(
-            'ℹ️ Hilfe',
-            { action: 'subscriptionHelp' },
+        elements.push(
+            listElement(
+                await chat.getTranslation(translations.unsubscribe),
+                'Abmelden',
+                button = buttonPostback(
+                    await chat.getTranslation(translations.unsubscribe),
+                    { action: 'unsubscribe' },
+                )
+            )
         );
     }
+
+    elements.push(listElement(
+        'ℹ️ Hilfe',
+        'Help',
+        buttonPostback(
+            'ℹ️ Hilfe',
+            { action: 'subscriptionHelp' },
+        ),
+    ));
 
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Show options', chat.language).send();
