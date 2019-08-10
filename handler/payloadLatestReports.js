@@ -41,5 +41,5 @@ export default async function(chat) {
         );
         elements.push(element);
     }
-    return chat.sendList(elements);
+    return chat.sendGenericList(elements);
 }

@@ -109,10 +109,7 @@ export const subscriptionList = async function(chat) {
         await chat.track.event('Subscription', 'Show options', chat.language).send();
     }
 
-    return chat.sendList(
-        elements,
-        button
-    );
+    return chat.sendGenericList(elements);
 };
 
 const removeLabel = async function(chat) {

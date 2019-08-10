@@ -31,7 +31,7 @@ const menuAbout = async function(chat) {
         await chat.track.event('Menu-Direct', 'About', chat.language).send();
     }
 
-    return chat.sendList(elements);
+    return chat.sendGenericList(elements);
 }
 
 
@@ -62,7 +62,7 @@ const menuSettings = async function(chat) {
         await chat.track.event('Menu-Direct', 'Settings', chat.language).send();
     }
 
-    return chat.sendList(elements);
+    return chat.sendGenericList(elements);
 }
 
 
