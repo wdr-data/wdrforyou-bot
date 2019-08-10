@@ -82,13 +82,12 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Deutsch_D1.png',
     ));
 
-    let button;
     if (chat.subscribed) {
         elements.push(
             listElement(
                 await chat.getTranslation(translations.unsubscribe),
                 'Abmelden',
-                button = buttonPostback(
+                buttonPostback(
                     await chat.getTranslation(translations.unsubscribe),
                     { action: 'unsubscribe' },
                 )
