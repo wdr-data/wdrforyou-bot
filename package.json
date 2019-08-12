@@ -39,6 +39,7 @@
     "env": "ENV_BUCKET_NAME=newsforyou-bot-config AWS_REGION=eu-central-1 s3-env-config",
     "set-menu": "babel-node setMenu.js",
     "broadcast-video": "babel-node sendVideoBroadcast.js",
-    "upload-attachment": "babel-node uploadAttachment.js"
+    "upload-attachment": "babel-node uploadAttachment.js",
+    "broadcast-results": "babel-node broadcastResults.js"
   }
 }

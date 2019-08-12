@@ -82,27 +82,33 @@ export const subscriptionList = async function(chat) {
         'https://s3.eu-central-1.amazonaws.com/newsforyou-bot-assets-jhoeke/Deutsch_D1.png',
     ));
 
-    let button;
     if (chat.subscribed) {
-        button = buttonPostback(
-            await chat.getTranslation(translations.unsubscribe),
-            { action: 'unsubscribe' },
-        );
-    } else {
-        button = buttonPostback(
-            'ℹ️ Hilfe',
-            { action: 'subscriptionHelp' },
+        elements.push(
+            listElement(
+                await chat.getTranslation(translations.unsubscribe),
+                'Abmelden',
+                buttonPostback(
+                    await chat.getTranslation(translations.unsubscribe),
+                    { action: 'unsubscribe' },
+                )
+            )
         );
     }
+
+    elements.push(listElement(
+        'ℹ️ Hilfe',
+        'Help',
+        buttonPostback(
+            'ℹ️ Hilfe',
+            { action: 'subscriptionHelp' },
+        ),
+    ));
 
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Show options', chat.language).send();
     }
 
-    return chat.sendList(
-        elements,
-        button
-    );
+    return chat.sendGenericList(elements);
 };
 
 const removeLabel = async function(chat) {

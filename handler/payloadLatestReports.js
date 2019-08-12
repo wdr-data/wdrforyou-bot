@@ -8,7 +8,7 @@ import { sendReport, translateReport } from "./payloadReport";
 
 export default async function(chat) {
     const url = urls.reports;
-    const qs = {limit: 4};
+    const qs = {limit: 10};
 
     if (chat.language !== 'german') {
         qs.language = chat.language;
@@ -36,10 +36,10 @@ export default async function(chat) {
             translateReport(report, chat).text,
             [ buttonPostback(
                 chat.getTranslation(translations.readReport),
-                { action: 'report', report: report.id }
+                { action: 'report', report: report.id, 'language': chat.language }
             )],
         );
         elements.push(element);
     }
-    return chat.sendList(elements);
+    return chat.sendGenericList(elements);
 }
