@@ -141,7 +141,7 @@ export default {
         arabic: "شارك خدمة INFOSforyou مع أصدقائك",
         persian: "بسيار خوب ! به زودى اينفوز فور يو جديدترین اخبار را برای شما خواهد فرستاد.",
         english: "Share INFOSforyou with your friends.",
-        german: "Teile  INFOSforyou mit deinen Freunden",
+        german: "Teile INFOSforyou mit deinen Freunden",
     },
     shareBotTitle: {
         arabic: "تعرف على INFOSforyou، خدمة الأخبار العاجلة من \"في دي إر فوريو\". الخدمة رائعة!",
