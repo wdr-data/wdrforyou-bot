@@ -23,19 +23,19 @@ const makeMenuLanguage = (locale, language) => {
         locale,
         'call_to_actions': [
             {
-                title: translations['share'][language],
+                title: translations['latestReports'][language],
                 type: 'postback',
-                payload: JSON.stringify({ action: 'share' }),
+                payload: JSON.stringify({ action: 'latest_reports' }),
+            },
+            {
+                title: translations['subscribeUnsubscribe'][language],
+                type: 'postback',
+                payload: JSON.stringify({ action: 'menuSettings' }),
             },
             {
                 title: translations['about'][language],
                 type: 'postback',
                 payload: JSON.stringify({ action: 'menuAbout' }),
-            },
-            {
-                title: translations['settings'][language],
-                type: 'postback',
-                payload: JSON.stringify({ action: 'menuSettings' }),
             },
         ]
     };

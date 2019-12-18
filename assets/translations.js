@@ -42,16 +42,16 @@ export default {
         german: "Sprache ändern",
     },
     about: {
-        arabic: "📝 من المزيد من المعلومات",
-        persian: "📝 اطلاعات بیشتر",
-        english: "📝 More Info",
-        german: "📝 Mehr Infos",
+        arabic: "ℹ️ من المزيد من المعلومات",
+        persian: "ℹ️ اطلاعات بیشتر",
+        english: "ℹ️ More Info",
+        german: "ℹ️ Mehr Infos",
     },
     latestReports: {
-        arabic: "منآخر الأخبار",
-        persian: "آخرين پيام ها",
-        english: "Last notifications",
-        german: "Letzte Meldungen",
+        arabic: "📰منآخر الأخبار",
+        persian: "📰آخرين پيام ها",
+        english: "📰Last notifications",
+        german: "📰Letzte Meldungen",
     },
     WDRforyou: {
         arabic: "في.دي.إر فوريو على فايسبوك",
@@ -63,7 +63,7 @@ export default {
         arabic: "حول INFOSforyou",
         persian: "درباره اینفو فور یو",
         english: "About INFOSforyou",
-        german: "Über INFOSforyou",
+        german: "INFOSforyou, was ist das?",
     },
     companyDetails: {
         arabic: "في.lمعلومات عن الخدمة",
@@ -141,7 +141,7 @@ export default {
         arabic: "شارك خدمة INFOSforyou مع أصدقائك",
         persian: "بسيار خوب ! به زودى اينفوز فور يو جديدترین اخبار را برای شما خواهد فرستاد.",
         english: "Share INFOSforyou with your friends.",
-        german: "Teile den Service INFOSforyou mit Deinen Freunden",
+        german: "Teile INFOSforyou mit deinen Freunden",
     },
     shareBotTitle: {
         arabic: "تعرف على INFOSforyou، خدمة الأخبار العاجلة من \"في دي إر فوريو\". الخدمة رائعة!",
@@ -180,10 +180,10 @@ export default {
         german: "Anmelden"
     },
     writeMessage: {
-        arabic: "إرسال رسالة",
-        persian: "نوشتن پیام",
-        english: "Write Message",
-        german: "Nachricht schreiben"
+        arabic: "✏️إرسال رسالة",
+        persian: "✏️نوشتن پیام",
+        english: "✏️ Write Message",
+        german: "✏️ Nachricht schreiben"
     },
     readReport: {
         arabic: "📰 قراءة المزيد",
@@ -196,5 +196,23 @@ export default {
         persian: "No report found",
         english: "No report found",
         german: "Es gibt noch keine Meldungen",
+    },
+    subscribeUnsubscribe: {
+        arabic: "🚨arabic Subscriptions",
+        persian: "🚨pesian Subscriptions",
+        english: "🚨Push-Settings",
+        german: "🚨Push-Einstellungen",
+    },
+    contactWdrforyou: {
+        arabic: "arabic contactWdrforyou",
+        persian: "persian contactWDRforyou",
+        english: "english contactWDRforyou",
+        german: "Nachricht an das WDRforyou Team schreiben",
+    },
+    more: {
+        arabic: "arabic more",
+        persian: "persian more",
+        english: "More",
+        german: "Mehr",
     },
 }
