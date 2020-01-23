@@ -19,7 +19,7 @@ service: newsforyou-bot
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   region: eu-central-1
   stage: ${file(config/env.js):stage}
   environment: ${file(config/env.js):env}

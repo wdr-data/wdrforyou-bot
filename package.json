@@ -33,7 +33,7 @@
     "universal-analytics": "^0.4.20"
   },
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=12"
   },
   "scripts": {
     "env": "ENV_BUCKET_NAME=newsforyou-bot-config AWS_REGION=eu-central-1 s3-env-config",
