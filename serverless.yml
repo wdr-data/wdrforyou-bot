@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: newsforyou-bot
+service: infosforyou-bot-fb
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -19,7 +19,7 @@ service: newsforyou-bot
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   region: eu-central-1
   stage: ${file(config/env.js):stage}
   environment: ${file(config/env.js):env}
