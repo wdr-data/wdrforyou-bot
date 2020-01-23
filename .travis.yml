@@ -7,7 +7,7 @@ node_js:
 
 env:
   global:
-    - ENV_BUCKET_NAME=newsforyou-bot-config
+    - ENV_BUCKET_NAME=infosforyou-bot-fb-config
     - AWS_REGION=eu-central-1
 
 cache: yarn
