@@ -83,7 +83,10 @@ export function getUsers(languages, start = null, limit = 50) {
     const params = {
         Limit: limit,
         TableName: process.env.DYNAMODB_SUBSCRIPTIONS,
-        FilterExpression: `language IN (${Object.keys(expressionAttributes).join(', ')})`,
+        FilterExpression: `#lang IN (${Object.keys(expressionAttributes).join(', ')})`,
+        ExpressionAttributeNames: {
+            '#lang': 'language',
+        },
         ExpressionAttributeValues: expressionAttributes,
     };
 
