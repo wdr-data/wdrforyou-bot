@@ -84,13 +84,13 @@ functions:
           method: post
   fbPushFetch:
     handler: entrypoint/fbPush.fetch
-    timeout: 30
+    timeout: 300
   fbPushSend:
     handler: entrypoint/fbPush.send
-    timeout: 30
+    timeout: 300
   fbPushFinish:
     handler: entrypoint/fbPush.finish
-    timeout: 30
+    timeout: 300
   fbPushProxy:
     handler: entrypoint/fbPush.proxy
     environment:
