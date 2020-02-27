@@ -4,13 +4,13 @@ import ua from 'universal-analytics'
 const Raven = require("raven");
 const RavenLambdaWrapper = require("serverless-sentry-lib");
 
-import {buttonUrl, sendBroadcastButtons, sendBroadcastText} from '../lib/facebook';
+import {buttonUrl} from '../lib/facebook';
 import DynamoDbCrud from '../lib/dynamodbCrud';
 import urls from "../lib/urls";
 import {makeMoreButton} from "../handler/payloadReport";
 import {markSentReport, markSentTranslation} from "../lib/cms";
-import { snooze } from "../lib/util";
 import translations from '../assets/translations';
+import { Chat } from '../lib/facebook';
 
 
 export const proxy = RavenLambdaWrapper.handler(Raven, async (event) => {
@@ -50,10 +50,7 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
 
     const translationList = [report, ...report.translations];
 
-    const batches = [];  // List of all batches for all languages
     const translationMap = {};  // Mapping of language to translation
-
-    const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
     for (const translation of translationList) {
 
@@ -64,83 +61,139 @@ export const fetch = RavenLambdaWrapper.handler(Raven, async (event) => {
 
         // Map the translation to the language
         translationMap[language] = translation;
-
-        // Make a list of all batches that should be sent
-        const label = await labels.load(language, 'language');
-        for (let batch = 0; batch <= label.batch; batch++) {
-            batches.push({
-                language,
-                batch,
-            });
-        }
     }
 
     return {
         state: 'nextBatch',
         report,
-        batches,
         translationMap,
-        results: [],
+        recipients: Object.fromEntries(
+            Object.keys(translationMap).map((lang) => [lang, 0])
+        ),
     };
 });
 
-export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
-    const {report, batches, translationMap, results} = event;
+export function getUsers(languages, start = null, limit = 50) {
 
-    const batchInfo = batches.shift();  // Remove and get first batch info
+    const expressionAttributes = Object.fromEntries(
+        languages.map((lang, index) => [`:language${index + 1}`, lang])
+    );
 
-    const {batch, language} = batchInfo;
+    const params = {
+        Limit: limit,
+        TableName: process.env.DYNAMODB_SUBSCRIPTIONS,
+        FilterExpression: `language IN (${Object.keys(expressionAttributes).join(', ')})`,
+        ExpressionAttributeValues: expressionAttributes,
+    };
 
-    const translation = translationMap[language];
-    const label = batch === 0 ? language : `${language}-${batch}`;
-
-    console.log(`Sending report ${JSON.stringify(report, null, 2)} to label ${label}`);
-
-    const moreButton = makeMoreButton(report, language || 'german');
-    let linkButton;
-
-    if (translation.link) {
-        linkButton = buttonUrl(
-            `🔗 ${translations.reportLinkButton[translation.language || 'german']}`,
-            translation.link
-        );
+    if (start) {
+        params.ExclusiveStartKey = start;
     }
-
-    const buttons = [moreButton, linkButton].filter(e => !!e);
-
-    const prefix = '+++NEWS+++\n';
-    let text;
-
-    if (!translation.language) {
-        text = `${prefix}${translation.text}\n\nm.me/WDRforyou`;
-    } else {
-        text = `${prefix}${translation.text}\n\n${report.text}\n\nm.me/WDRforyou`;
-    }
-
-    let result;
-
-    if (!buttons.length) {
-        console.log('Sending broadcast without buttons');
-        result = await sendBroadcastText(text, null, label);
-    } else {
-        console.log('Sending broadcast with buttons');
-        result = await sendBroadcastButtons(text, buttons, null, label);
-    }
-
-    results.push({
-        language,
-        broadcastId: result.broadcast_id,
+    return new Promise((resolve, reject) => {
+        ddb.scan(params, (err, data) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve({ users: data.Items, last: data.LastEvaluatedKey });
+        });
     });
+}
+
+const handlePushFailed = async (chat, error) => {
+    console.error(error);
+
+    if (error.error.code === 'ETIMEDOUT') {
+        console.error('Request timed out!');
+        Raven.captureException(error);
+        return;
+    } else if (error.statusCode !== 400) {
+        console.error('Not a bad request!');
+        Raven.captureException(error);
+        return;
+    }
+
+    // Handle FB error codes
+    const resp = error.error.error; // Yes, this is real
+
+    // 551: This person isn't available right now.
+    // 100 / 2018001: No matching user found
+    if (resp.code === 551 || resp.code === 100 && resp['error_subcode'] === 2018001) {
+        if (Math.random() > .9) {
+            console.log(`Deleting user ${chat.psid} due to code ${resp.code}`);
+            const subscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
+            return subscriptions.remove(chat.psid);
+        }
+    } else {
+        console.error(`Unknown error code ${resp.code}!`);
+        Raven.captureException(error);
+    }
+};
+
+export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
+    const {report, translationMap, recipients} = event;
+    const languages = Object.keys(translationMap);
+
+    const result = await getUsers(languages, event.start);
+    users = result.users;
+    last = result.last;
+
+    await Promise.all(users.map((user) => {
+        const chat = new Chat({ sender: { id: user.psid } });
+        const language = user.language;
+
+        const translation = translationMap[language];
+
+        const moreButton = makeMoreButton(report, language || 'german');
+        let linkButton;
+
+        if (translation.link) {
+            linkButton = buttonUrl(
+                `🔗 ${translations.reportLinkButton[translation.language || 'german']}`,
+                translation.link
+            );
+        }
+
+        const buttons = [moreButton, linkButton].filter(e => !!e);
+
+        const prefix = '+++NEWS+++\n';
+        let text;
+
+        if (!translation.language) {
+            text = `${prefix}${translation.text}\n\nm.me/WDRforyou`;
+        } else {
+            text = `${prefix}${translation.text}\n\n${report.text}\n\nm.me/WDRforyou`;
+        }
+
+        try {
+            if (!buttons.length) {
+                await chat.sendText(text);
+            } else {
+                await chat.sendButtons(text, buttons);
+            }
+            recipients[language]++;
+        } catch (e) {
+            await handlePushFailed(chat, e);
+        }
+    }));
+
+    // LastEvaluatedKey is empty, scan is finished
+    if (!last) {
+        return {
+            state: 'finished',
+            report,
+            translationMap,
+            recipients,
+        };
+    }
 
     return {
-        state: batches.length > 0 ? 'nextBatch' : 'finished',
+        state: 'nextBatch',
         report,
-        batches,
         translationMap,
-        results,
-    }
+        recipients,
+        start: last,
+    };
 });
-
 
 export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
     console.log('Sending of push finished:', event);
@@ -152,19 +205,9 @@ export const finish = RavenLambdaWrapper.handler(Raven, async (event) => {
         await markSentTranslation(event.translationMap[key].id);
     }
 
-    await snooze(10000);
     const tracker = ua(process.env.UA_TRACKING_ID, 'broadcaster', {strictCidFormat: false});
 
-    for (const result of event.results) {
-        const stats = await request.get({
-            uri: `https://graph.facebook.com/v3.2/${result.broadcastId}/insights/messages_sent`,
-            qs: {
-                access_token: process.env.FB_PAGETOKEN,
-            },
-            json: true,
-        });
-        const amount = stats.data[0].values[0].value;
-
-        await tracker.event('Broadcast', event.report.headline, result.language, amount).send();
+    for (const [language, amount] of Object.entries(event.recipients)) {
+        await tracker.event('Broadcast', event.report.headline, language, amount).send();
     }
 });
