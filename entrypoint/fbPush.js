@@ -11,6 +11,7 @@ import {makeMoreButton} from "../handler/payloadReport";
 import {markSentReport, markSentTranslation} from "../lib/cms";
 import translations from '../assets/translations';
 import { Chat } from '../lib/facebook';
+import ddb from '../lib/dynamodb';
 
 
 export const proxy = RavenLambdaWrapper.handler(Raven, async (event) => {
