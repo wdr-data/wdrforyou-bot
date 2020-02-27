@@ -137,7 +137,7 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
     users = result.users;
     last = result.last;
 
-    await Promise.all(users.map((user) => {
+    await Promise.all(users.map(async (user) => {
         const chat = new Chat({ sender: { id: user.psid } });
         const language = user.language;
 
