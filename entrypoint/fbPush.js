@@ -170,9 +170,30 @@ export const send = RavenLambdaWrapper.handler(Raven, async (event) => {
 
         try {
             if (!buttons.length) {
-                await chat.sendText(text);
+                await chat.sendText(
+                    text,
+                    null,
+                    {
+                        timeout: 20000,
+                        extra: {
+                            'messaging_type': 'MESSAGE_TAG',
+                            tag: 'NON_PROMOTIONAL_SUBSCRIPTION',
+                        },
+                    }
+                );
             } else {
-                await chat.sendButtons(text, buttons);
+                await chat.sendButtons(
+                    text,
+                    buttons,
+                    null,
+                    {
+                        timeout: 20000,
+                        extra: {
+                            'messaging_type': 'MESSAGE_TAG',
+                            tag: 'NON_PROMOTIONAL_SUBSCRIPTION',
+                        },
+                    }
+                );
             }
             recipients[language]++;
         } catch (e) {
