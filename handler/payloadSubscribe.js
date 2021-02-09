@@ -177,7 +177,6 @@ export const subscribe = async function(chat, payload) {
         await chat.track.event('Subscription', 'Subscribe', chat.language).send();
     }
 
-    await chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
     return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);
 };
 
