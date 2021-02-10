@@ -111,16 +111,6 @@ export const subscriptionList = async function(chat) {
     return chat.sendGenericList(elements);
 };
 
-const removeLabel = async function(chat) {
-    try {
-        if (chat.label) {
-            await chat.removeLabel(chat.label);
-        }
-    } catch (e) {
-        console.error('Tried to remove label for user without label');
-    }
-};
-
 const getNewLabel = async function(lang) {
     const labels = new DynamoDbCrud(process.env.DYNAMODB_LABELS);
 
@@ -147,10 +137,9 @@ const getNewLabel = async function(lang) {
 };
 
 export const subscribe = async function(chat, payload) {
-    await removeLabel(chat);
+
     const label = await getNewLabel(payload.subscription);
 
-    await chat.addLabel(label);
     await enableSubscription(chat.event.sender.id, { language: payload.subscription, label });
 
     chat.language = payload.subscription;
@@ -177,14 +166,11 @@ export const subscribe = async function(chat, payload) {
         await chat.track.event('Subscription', 'Subscribe', chat.language).send();
     }
 
-    await chat.sendAttachment(chat.getTranslation(videos.postAnalytics));
     return chat.sendFragmentsWithButtons(subscriptionReturn.fragments, buttons);
 };
 
 export const unsubscribe = async function(chat) {
     const libSubscriptions = new DynamoDbCrud(process.env.DYNAMODB_SUBSCRIPTIONS);
-
-    await removeLabel(chat);
 
     if (chat.trackingEnabled) {
         await chat.track.event('Subscription', 'Unsubscribe', chat.language).send();
